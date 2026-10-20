@@ -56,6 +56,60 @@ function renderRefactoringSources() {
   $("#refactoring-sources").innerHTML = content.refactoringSources.map((source) => `<a href="${escapeHtml(source.url)}" target="_blank" rel="noreferrer"><span>${escapeHtml(source.label)}</span><b>fonte ↗</b></a>`).join("");
 }
 
+function themeSlug(value = "") {
+  return normalize(value).replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+}
+
+function renderThemeAccordion({ id, label, count, description, contentHtml, className = "" }) {
+  return `<details class="theme-accordion ${escapeHtml(className)}" id="${escapeHtml(id)}">
+    <summary>
+      <span class="theme-accordion-mark" aria-hidden="true">＋</span>
+      <span class="theme-accordion-copy"><b>${escapeHtml(label)}</b><small>${escapeHtml(count)} · ${escapeHtml(description)}</small></span>
+      <span class="theme-accordion-action">abrir tema</span>
+    </summary>
+    <div class="theme-accordion-content">${contentHtml}</div>
+  </details>`;
+}
+
+function bindThemeAccordions() {
+  document.querySelectorAll("[data-accordion-group]").forEach((container) => {
+    [...container.children].filter((child) => child.classList.contains("theme-accordion")).forEach((accordion) => {
+      if (accordion.dataset.accordionBound) return;
+      accordion.dataset.accordionBound = "true";
+      accordion.addEventListener("toggle", () => {
+        if (!accordion.open) return;
+        [...container.children]
+          .filter((child) => child !== accordion && child.classList.contains("theme-accordion") && child.open)
+          .forEach((other) => { other.open = false; });
+      });
+    });
+  });
+}
+
+const patternThemes = [
+  { id: "creational", label: "Criacionais", description: "criar objetos sem espalhar dependências" },
+  { id: "structural", label: "Estruturais", description: "compor estruturas flexíveis" },
+  { id: "behavioral", label: "Comportamentais", description: "distribuir algoritmos e responsabilidades" },
+];
+
+const smellThemeDescriptions = {
+  "Bloaters": "estruturas que cresceram além do necessário",
+  "Object-Orientation Abusers": "herança e encapsulamento usados fora do contexto",
+  "Change Preventers": "mudanças que espalham impacto pelo sistema",
+  "Dispensables": "elementos que já não pagam seu custo",
+  "Couplers": "acoplamentos que dificultam a evolução",
+  "Other Smells": "sinais que pedem investigação contextual",
+};
+
+const techniqueThemeDescriptions = {
+  "Composing Methods": "tornar a intenção local e legível",
+  "Moving Features between Objects": "reposicionar responsabilidades",
+  "Organizing Data": "dar uma forma melhor aos dados",
+  "Simplifying Conditional Expressions": "reduzir ramificações e duplicação",
+  "Simplifying Method Calls": "melhorar a conversa entre objetos",
+  "Dealing with Generalization": "ajustar hierarquia e abstração",
+};
+
 function renderPatterns() {
   const query = $("#pattern-search").value.trim();
   const family = $("#pattern-filter").value;
@@ -69,7 +123,7 @@ function renderPatterns() {
     const matchesQuery = !query || normalize([pattern.name, pattern.categoryLabel, pattern.summary, pattern.problem, pattern.solution, pattern.example, pattern.applicability].join(" ")).includes(normalize(query));
     return matchesQuery && (family === "all" || pattern.category === family);
   });
-  $("#pattern-list").innerHTML = visible.map((pattern) => `
+  const patternCard = (pattern) => `
     <article class="pattern-card" id="pattern-${escapeHtml(pattern.id)}" data-pattern-id="${escapeHtml(pattern.id)}">
       <div class="pattern-card-head"><span class="pattern-category">${escapeHtml(pattern.categoryLabel)}</span><a href="${escapeHtml(pattern.sourceUrl)}" target="_blank" rel="noreferrer">Refactoring.Guru ↗</a></div>
       <h3>${escapeHtml(pattern.name)}</h3>
@@ -81,18 +135,49 @@ function renderPatterns() {
         </div>
       </details>
     </article>
-  `).join("");
+  `;
+  const themeAccordions = patternThemes.map((theme) => {
+    const items = visible.filter((pattern) => pattern.category === theme.id);
+    if (!items.length) return "";
+    return renderThemeAccordion({
+      id: `pattern-theme-${theme.id}`,
+      label: theme.label,
+      count: `${items.length} ${items.length === 1 ? "pattern" : "patterns"}`,
+      description: theme.description,
+      contentHtml: `<div class="pattern-theme-grid">${items.map(patternCard).join("")}</div>`,
+      className: "pattern-theme",
+    });
+  }).join("");
+  $("#pattern-list").innerHTML = themeAccordions || `<p class="catalog-empty">Nenhum pattern encontrado.</p>`;
   $("#pattern-count").textContent = `${visible.length} ${visible.length === 1 ? "pattern" : "patterns"}`;
+  bindThemeAccordions();
   bindCopyButtons();
 }
 
 function renderPrinciples() {
-  $("#solid-grid").innerHTML = content.solidPrinciples.map((principle) => `
+  const solidCards = content.solidPrinciples.map((principle) => `
     <article class="principle-card solid-card"><div class="principle-mark">${escapeHtml(principle.acronym)}</div><div class="pattern-card-head"><span class="pattern-category">SOLID</span><a href="${escapeHtml(principle.sourceUrl)}" target="_blank" rel="noreferrer">fonte ↗</a></div><h3>${escapeHtml(principle.name)}</h3><p>${escapeHtml(principle.summary)}</p><details class="pattern-details"><summary>abrir princípio <small>problema · regra · exemplo</small></summary><div class="principle-detail"><div class="copy-block"><b>Problem</b><p>${escapeHtml(principle.problem)}</p></div><div class="copy-block"><b>Rule</b><p>${escapeHtml(principle.rule)}</p></div><div class="copy-block"><b>Example</b><p>${escapeHtml(principle.example)}</p></div><div class="copy-block"><b>Trade-offs</b><p>${escapeHtml(principle.tradeoffs)}</p></div><div class="pattern-source"><span>refs: ${referenceInlineLinks(principle.refs)}</span></div></div></details></article>
   `).join("");
-  $("#clean-code-grid").innerHTML = content.cleanCodePrinciples.map((principle) => `
+  const cleanCodeCards = content.cleanCodePrinciples.map((principle) => `
     <article class="principle-card clean-card"><div class="pattern-card-head"><span class="pattern-category">CLEAN CODE</span><a href="${escapeHtml(principle.sourceUrl)}" target="_blank" rel="noreferrer">fonte ↗</a></div><h3>${escapeHtml(principle.name)}</h3><p>${escapeHtml(principle.summary)}</p><details class="pattern-details"><summary>abrir princípio <small>exemplo · limite</small></summary><div class="principle-detail"><div class="copy-block"><b>Example</b><p>${escapeHtml(principle.example)}</p></div><div class="copy-block"><b>Trade-offs</b><p>${escapeHtml(principle.tradeoffs)}</p></div><div class="pattern-source"><span>refs: ${referenceInlineLinks(principle.refs)}</span></div></div></details></article>
   `).join("");
+  $("#solid-grid").innerHTML = renderThemeAccordion({
+    id: "principles-solid-theme",
+    label: "SOLID",
+    count: `${content.solidPrinciples.length} principles`,
+    description: "um contrato para orientar fronteiras e substituição",
+    contentHtml: `<div class="principle-grid">${solidCards}</div>`,
+    className: "principle-theme solid-theme",
+  });
+  $("#clean-code-grid").innerHTML = renderThemeAccordion({
+    id: "principles-clean-code-theme",
+    label: "Clean Code",
+    count: `${content.cleanCodePrinciples.length} principles`,
+    description: "clareza, intenção e mudança proporcional ao risco",
+    contentHtml: `<div class="principle-grid">${cleanCodeCards}</div>`,
+    className: "principle-theme clean-code-theme",
+  });
+  bindThemeAccordions();
 }
 
 function renderRefactoringCatalog() {
@@ -107,9 +192,36 @@ function renderRefactoringCatalog() {
   const matches = (item) => (!query || normalize([item.name, item.group, item.symptom, item.response].join(" ")).includes(normalize(query))) && (group === "all" || item.group === group);
   const smells = content.refactoringSmells.filter(matches);
   const techniques = content.refactoringTechniques.filter(matches);
-  $("#smell-list").innerHTML = smells.length ? smells.map((smell) => `<article class="catalog-item smell-item"><span class="branch-label">${escapeHtml(smell.group)}</span><h3>${escapeHtml(smell.name)}</h3><p>${escapeHtml(smell.symptom)}</p><details><summary>resposta sugerida <small>abrir</small></summary><p>${escapeHtml(smell.response)}</p><a href="${escapeHtml(smell.sourceUrl)}" target="_blank" rel="noreferrer">fonte e catálogo ↗</a></details></article>`).join("") : `<p class="catalog-empty">Nenhum code smell encontrado.</p>`;
-  $("#technique-list").innerHTML = techniques.length ? techniques.map((technique) => `<details class="technique-item"><summary><span>${escapeHtml(technique.name)}</span><small>${escapeHtml(technique.group)}</small></summary><p>${escapeHtml(technique.symptom)}</p><p>${escapeHtml(technique.response)}</p><a href="${escapeHtml(technique.sourceUrl)}" target="_blank" rel="noreferrer">fonte e catálogo ↗</a></details>`).join("") : `<p class="catalog-empty">Nenhuma technique encontrada.</p>`;
+  const smellGroups = [...new Set(smells.map((smell) => smell.group))];
+  const techniqueGroups = [...new Set(techniques.map((technique) => technique.group))];
+  const smellAccordions = smellGroups.map((theme) => {
+    const items = smells.filter((smell) => smell.group === theme);
+    const itemsHtml = items.map((smell) => `<article class="catalog-item smell-item"><span class="branch-label">${escapeHtml(smell.group)}</span><h3>${escapeHtml(smell.name)}</h3><p>${escapeHtml(smell.symptom)}</p><details><summary>resposta sugerida <small>abrir</small></summary><p>${escapeHtml(smell.response)}</p><a href="${escapeHtml(smell.sourceUrl)}" target="_blank" rel="noreferrer">fonte e catálogo ↗</a></details></article>`).join("");
+    return renderThemeAccordion({
+      id: `smell-theme-${themeSlug(theme)}`,
+      label: theme,
+      count: `${items.length} ${items.length === 1 ? "smell" : "smells"}`,
+      description: smellThemeDescriptions[theme] || "sinais para investigar",
+      contentHtml: `<div class="smell-theme-grid">${itemsHtml}</div>`,
+      className: "refactoring-theme smell-theme",
+    });
+  }).join("");
+  const techniqueAccordions = techniqueGroups.map((theme) => {
+    const items = techniques.filter((technique) => technique.group === theme);
+    const itemsHtml = items.map((technique) => `<details class="technique-item"><summary><span>${escapeHtml(technique.name)}</span><small>${escapeHtml(technique.group)}</small></summary><p>${escapeHtml(technique.symptom)}</p><p>${escapeHtml(technique.response)}</p><a href="${escapeHtml(technique.sourceUrl)}" target="_blank" rel="noreferrer">fonte e catálogo ↗</a></details>`).join("");
+    return renderThemeAccordion({
+      id: `technique-theme-${themeSlug(theme)}`,
+      label: theme,
+      count: `${items.length} ${items.length === 1 ? "technique" : "techniques"}`,
+      description: techniqueThemeDescriptions[theme] || "uma mudança pequena e verificável",
+      contentHtml: `<div class="technique-theme-list">${itemsHtml}</div>`,
+      className: "refactoring-theme technique-theme",
+    });
+  }).join("");
+  $("#smell-list").innerHTML = smellAccordions || `<p class="catalog-empty">Nenhum code smell encontrado.</p>`;
+  $("#technique-list").innerHTML = techniqueAccordions || `<p class="catalog-empty">Nenhuma technique encontrada.</p>`;
   $("#refactoring-count").textContent = `${smells.length} smells · ${techniques.length} techniques`;
+  bindThemeAccordions();
 }
 
 function renderImprovement() {
@@ -282,6 +394,32 @@ function bindCopyButtons() {
   });
 }
 
+async function renderMermaid() {
+  const nodes = [...document.querySelectorAll(".mermaid")];
+  if (!nodes.length) return;
+  try {
+    const module = await import("https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs");
+    const mermaid = module.default;
+    mermaid.initialize({
+      startOnLoad: false,
+      theme: "base",
+      securityLevel: "strict",
+      themeVariables: {
+        primaryColor: "#eef6ff",
+        primaryTextColor: "#07152e",
+        primaryBorderColor: "#0b5cff",
+        lineColor: "#0b5cff",
+        secondaryColor: "#fff4db",
+        tertiaryColor: "#f9edff",
+        fontFamily: "Inter, sans-serif",
+      },
+    });
+    await mermaid.run({ nodes });
+  } catch (error) {
+    nodes.forEach((node) => node.classList.add("mermaid-fallback"));
+  }
+}
+
 function focusHashTarget() {
   const id = window.location.hash.slice(1);
   if (!id) return;
@@ -291,6 +429,8 @@ function focusHashTarget() {
     document.querySelectorAll(".concept-card.is-target").forEach((card) => card.classList.remove("is-target"));
     target.classList.add("is-target");
   }
+  const parentAccordion = target.closest(".theme-accordion");
+  if (parentAccordion) parentAccordion.open = true;
   window.setTimeout(() => target.scrollIntoView({ behavior: "smooth", block: "center" }), 80);
 }
 
@@ -308,6 +448,7 @@ renderDidacticModel();
 renderConcepts();
 renderReferences();
 bindCopyButtons();
+void renderMermaid();
 
 $("#concept-search").addEventListener("input", renderConcepts);
 $("#block-filter").addEventListener("change", renderConcepts);

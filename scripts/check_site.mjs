@@ -11,7 +11,7 @@ if (missingFiles.length) throw new Error(`Arquivos ausentes: ${missingFiles.join
 const index = read("index.html");
 const presentation = read("apresentacao.html");
 const app = read("assets/js/app.js");
-const expectedIds = ["workflow", "workflow-track", "issue-memory", "continuous-improvement", "harness-artifacts", "didactic-model", "model-routing", "architecture", "refactoring-catalog", "solid-principles", "clean-code-principles", "refactoring-smells", "refactoring-techniques", "library", "references"];
+const expectedIds = ["workflow", "workflow-track", "issue-memory", "harness-flow", "continuous-improvement", "harness-artifacts", "didactic-model", "model-routing", "architecture", "refactoring-catalog", "solid-principles", "clean-code-principles", "refactoring-smells", "refactoring-techniques", "library", "references"];
 const missingIds = expectedIds.filter((id) => !index.includes(`id="${id}"`));
 if (missingIds.length) throw new Error(`Âncoras ausentes: ${missingIds.join(", ")}`);
 
@@ -37,6 +37,8 @@ if (!content.cleanCodePrinciples?.length || !content.refactoringSmells?.length |
 const sourceItems = [...content.patternCatalog, ...content.solidPrinciples, ...content.cleanCodePrinciples, ...content.refactoringSmells, ...content.refactoringTechniques];
 if (sourceItems.some((item) => !item.sourceUrl?.includes("refactoring.guru") || !item.refs?.length)) throw new Error("Item do catálogo sem origem ou bibliografia");
 if (!app.includes("data-pattern-id") || !app.includes("pattern-filter")) throw new Error("Interação do catálogo ausente");
+if (!index.includes('class="mermaid"')) throw new Error("Fluxo Mermaid ausente");
+if (!app.includes("theme-accordion") || !app.includes("renderMermaid")) throw new Error("Sanfonas por tema ou renderização Mermaid ausentes");
 if (content.concepts[0].term !== "rate limit" || content.concepts[0].gloss !== "limite de requisições") throw new Error("Termo rate limit não está no formato solicitado");
 
 console.log(`OK: ${requiredFiles.length} arquivos, ${content.concepts.length} conceitos, ${content.references.length} referências e ${slideCount} slides`);

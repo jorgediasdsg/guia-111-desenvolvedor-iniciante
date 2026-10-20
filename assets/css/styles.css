@@ -255,7 +255,19 @@ kbd { border: 1px solid var(--line); color: var(--muted); font-family: var(--mon
 .source-strip b { color: var(--muted); font-family: var(--mono); font-size: 9px; font-weight: 500; text-transform: uppercase; }
 .catalog-toolbar { align-items: end; display: grid; gap: 12px; grid-template-columns: minmax(0, 1fr) 210px auto; margin-bottom: 18px; }
 .catalog-toolbar .search-box { min-width: 0; }
-.pattern-list { display: grid; gap: 12px; grid-template-columns: repeat(2, 1fr); }
+.theme-accordion-list { display: grid; gap: 12px; }
+.theme-accordion { background: var(--white); border: 1px solid var(--line); box-shadow: var(--shadow); }
+.theme-accordion > summary { align-items: center; cursor: pointer; display: grid; gap: 14px; grid-template-columns: 28px minmax(0, 1fr) auto; list-style: none; padding: 18px 20px; }
+.theme-accordion > summary::-webkit-details-marker { display: none; }
+.theme-accordion-mark { color: var(--magenta); font-family: var(--mono); font-size: 20px; line-height: 1; }
+.theme-accordion[open] .theme-accordion-mark { font-size: 0; }
+.theme-accordion[open] .theme-accordion-mark::after { content: '−'; font-size: 20px; }
+.theme-accordion-copy { display: flex; flex-direction: column; gap: 5px; min-width: 0; }
+.theme-accordion-copy b { color: var(--ink); font-size: 17px; }
+.theme-accordion-copy small { color: var(--muted); font-family: var(--mono); font-size: 9px; line-height: 1.5; text-transform: uppercase; }
+.theme-accordion-action { color: var(--magenta); font-family: var(--mono); font-size: 9px; text-transform: uppercase; }
+.theme-accordion-content { border-top: 1px solid var(--line); padding: 16px; }
+.pattern-theme-grid { display: grid; gap: 12px; grid-template-columns: repeat(2, 1fr); }
 .pattern-card, .principle-card { background: var(--white); border: 1px solid var(--line); box-shadow: var(--shadow); min-width: 0; padding: 23px; }
 .pattern-card:nth-child(3n + 1) { border-top: 4px solid var(--cyan); }
 .pattern-card:nth-child(3n + 2) { border-top: 4px solid var(--magenta); }
@@ -284,18 +296,28 @@ kbd { border: 1px solid var(--line); color: var(--muted); font-family: var(--mon
 .refactoring-catalog-section { background: #fff9ef; }
 .subcatalog-heading { align-items: center; border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; margin: 28px 0 12px; padding-bottom: 10px; }
 .subcatalog-heading .text-link { font-size: 10px; }
-.smell-list { display: grid; gap: 12px; grid-template-columns: repeat(3, 1fr); }
+.smell-theme-grid { display: grid; gap: 12px; grid-template-columns: repeat(3, 1fr); }
 .catalog-item { background: var(--white); border: 1px solid var(--line); padding: 18px; }
 .catalog-item h3 { font-size: 19px; margin: 18px 0 8px; }
 .catalog-item > p, .catalog-item details p, .technique-item p { color: var(--ink-soft); font-size: 11px; line-height: 1.5; }
 .catalog-item details { border-top: 1px solid var(--line); margin-top: 15px; }
 .catalog-item details a, .technique-item a { color: var(--magenta); font-family: var(--mono); font-size: 9px; text-transform: uppercase; }
-.technique-list { columns: 3; column-gap: 12px; }
+.technique-theme-list { columns: 3; column-gap: 12px; }
 .technique-item { background: var(--white); border: 1px solid var(--line); break-inside: avoid; margin-bottom: 12px; padding: 0 16px; }
 .technique-item summary span { color: var(--ink); font-family: var(--sans); font-size: 13px; text-transform: none; }
 .technique-item summary small { color: var(--muted); font-size: 9px; text-transform: none; }
 .technique-item p { margin: 0 0 10px; }
 .catalog-empty { color: var(--muted); font-family: var(--mono); font-size: 11px; }
+
+.flow-section { background: var(--navy); color: var(--white); max-width: none; margin-left: calc(clamp(24px, 6vw, 96px) * -1); margin-right: calc(clamp(24px, 6vw, 96px) * -1); padding-left: clamp(24px, 6vw, 96px); padding-right: clamp(24px, 6vw, 96px); }
+.flow-section .section-kicker { color: var(--cyan); }
+.flow-section .section-heading p { color: rgba(255,255,255,.66); }
+.mermaid-wrap { background: #f7fbff; border: 1px solid rgba(255,255,255,.18); box-shadow: 0 20px 60px rgba(0,0,0,.22); overflow-x: auto; padding: clamp(16px, 3vw, 34px); }
+.mermaid { min-width: 980px; }
+.mermaid svg { display: block; height: auto; max-width: none; width: 100%; }
+.mermaid-fallback { color: var(--ink); font-family: var(--mono); font-size: 11px; line-height: 1.65; min-width: 0; white-space: pre-wrap; }
+.flow-fallback-note { color: rgba(255,255,255,.62); font-family: var(--mono); font-size: 10px; line-height: 1.6; margin: 15px 0 0; text-transform: uppercase; }
+.flow-fallback-note span { color: var(--lime); }
 
 .concept-application { border-top: 1px solid var(--line); grid-column: 2 / -1; margin-top: 22px; }
 .concept-application summary { align-items: center; color: var(--magenta); cursor: pointer; display: flex; font-family: var(--mono); font-size: 10px; justify-content: space-between; list-style: none; padding: 14px 0; text-transform: uppercase; }
@@ -437,8 +459,8 @@ kbd { border: 1px solid var(--line); color: var(--muted); font-family: var(--mon
   .source-strip { grid-template-columns: repeat(3, 1fr); }
   .source-strip a:nth-child(3) { border-right: 0; }
   .source-strip a:nth-child(n + 4) { border-top: 1px solid var(--line); }
-  .principle-grid, .clean-code-grid, .smell-list { grid-template-columns: repeat(2, 1fr); }
-  .technique-list { columns: 2; }
+  .pattern-theme-grid, .principle-grid, .smell-theme-grid { grid-template-columns: repeat(2, 1fr); }
+  .technique-theme-list { columns: 2; }
 }
 
 @media (max-width: 720px) {
@@ -448,8 +470,11 @@ kbd { border: 1px solid var(--line); color: var(--muted); font-family: var(--mon
   .source-strip a:nth-child(3) { border-right: 1px solid var(--line); }
   .source-strip a:nth-child(even) { border-right: 0; }
   .source-strip a:nth-child(n + 3) { border-top: 1px solid var(--line); }
-  .pattern-list, .principle-grid, .clean-code-grid, .smell-list { grid-template-columns: 1fr; }
+  .pattern-theme-grid, .principle-grid, .smell-theme-grid { grid-template-columns: 1fr; }
   .pattern-detail-grid { grid-template-columns: 1fr; }
-  .technique-list { columns: 1; }
+  .technique-theme-list { columns: 1; }
+  .theme-accordion > summary { grid-template-columns: 24px minmax(0, 1fr); padding: 16px; }
+  .theme-accordion-action { display: none; }
+  .mermaid { min-width: 760px; }
   .subcatalog-heading { align-items: flex-start; flex-direction: column; gap: 8px; }
 }
