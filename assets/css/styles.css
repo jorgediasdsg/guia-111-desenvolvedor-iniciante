@@ -309,14 +309,27 @@ kbd { border: 1px solid var(--line); color: var(--muted); font-family: var(--mon
 .technique-item p { margin: 0 0 10px; }
 .catalog-empty { color: var(--muted); font-family: var(--mono); font-size: 11px; }
 
-.flow-section { background: var(--navy); color: var(--white); max-width: none; margin-left: calc(clamp(24px, 6vw, 96px) * -1); margin-right: calc(clamp(24px, 6vw, 96px) * -1); padding-left: clamp(24px, 6vw, 96px); padding-right: clamp(24px, 6vw, 96px); }
+.flow-section { background: linear-gradient(135deg, var(--navy) 0%, #0a1b3a 68%, #0a234b 100%); color: var(--white); max-width: 1440px; margin: 0 auto; padding-left: clamp(32px, 7vw, 112px); padding-right: clamp(32px, 7vw, 112px); }
 .flow-section .section-kicker { color: var(--cyan); }
 .flow-section .section-heading p { color: rgba(255,255,255,.66); }
-.mermaid-wrap { background: #f7fbff; border: 1px solid rgba(255,255,255,.18); box-shadow: 0 20px 60px rgba(0,0,0,.22); overflow-x: auto; padding: clamp(16px, 3vw, 34px); }
-.mermaid { min-width: 980px; }
-.mermaid svg { display: block; height: auto; max-width: none; width: 100%; }
+.flow-legend { align-items: center; display: flex; flex-wrap: wrap; gap: 9px 18px; margin: -18px auto 18px; max-width: 1120px; }
+.flow-legend span { align-items: center; color: rgba(255,255,255,.68); display: inline-flex; font-family: var(--mono); font-size: 9px; gap: 7px; text-transform: uppercase; }
+.legend-swatch { display: inline-block; height: 10px; width: 10px; }
+.legend-input { background: #eef6ff; border: 1px solid #0b5cff; }
+.legend-delivery { background: #e9f9ef; border: 1px solid #25d366; }
+.legend-gate { background: #fff4db; border: 1px solid #f6bd4a; }
+.legend-fallback { background: #fff0eb; border: 1px solid #ff6b4a; }
+.legend-learning { background: #f9edff; border: 1px solid #e50068; }
+.mermaid-wrap { background: #f7fbff; border: 1px solid rgba(255,255,255,.18); box-shadow: 0 20px 60px rgba(0,0,0,.22); margin: 0 auto; max-width: 1120px; overflow-x: auto; padding: clamp(18px, 3vw, 34px); }
+.mermaid { min-width: 0; width: 100%; }
+.mermaid svg { display: block; height: auto; max-width: 100%; width: 100%; }
 .mermaid-fallback { color: var(--ink); font-family: var(--mono); font-size: 11px; line-height: 1.65; min-width: 0; white-space: pre-wrap; }
-.flow-fallback-note { color: rgba(255,255,255,.62); font-family: var(--mono); font-size: 10px; line-height: 1.6; margin: 15px 0 0; text-transform: uppercase; }
+.flow-reading-guide { display: grid; gap: 12px; grid-template-columns: repeat(3, 1fr); margin: 18px auto 0; max-width: 1120px; }
+.flow-reading-guide article { align-items: start; background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.15); display: grid; gap: 12px; grid-template-columns: 28px 1fr; padding: 16px; }
+.flow-reading-guide article > span { align-items: center; background: var(--lime); color: var(--ink); display: inline-flex; font-family: var(--mono); font-size: 10px; height: 24px; justify-content: center; width: 24px; }
+.flow-reading-guide b { color: var(--white); font-size: 14px; }
+.flow-reading-guide p { color: rgba(255,255,255,.62); font-size: 11px; line-height: 1.5; margin: 4px 0 0; }
+.flow-fallback-note { color: rgba(255,255,255,.62); font-family: var(--mono); font-size: 10px; line-height: 1.6; margin: 15px auto 0; max-width: 1120px; text-transform: uppercase; }
 .flow-fallback-note span { color: var(--lime); }
 
 .concept-application { border-top: 1px solid var(--line); grid-column: 2 / -1; margin-top: 22px; }
@@ -475,6 +488,7 @@ kbd { border: 1px solid var(--line); color: var(--muted); font-family: var(--mon
   .technique-theme-list { columns: 1; }
   .theme-accordion > summary { grid-template-columns: 24px minmax(0, 1fr); padding: 16px; }
   .theme-accordion-action { display: none; }
-  .mermaid { min-width: 760px; }
+  .flow-legend { align-items: start; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); margin-top: -8px; }
+  .flow-reading-guide { grid-template-columns: 1fr; }
   .subcatalog-heading { align-items: flex-start; flex-direction: column; gap: 8px; }
 }

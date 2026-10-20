@@ -99,38 +99,50 @@
             </div>
             <p>O caminho feliz chega à produção. Se o QA reprovar, a evidência retorna à specification, corre o harness novamente e permanece registrada na issue.</p>
           </div>
+          <div class="flow-legend" aria-label="Legenda do fluxo">
+            <span><i class="legend-swatch legend-input"></i>contexto e specification</span>
+            <span><i class="legend-swatch legend-delivery"></i>execução e evidência</span>
+            <span><i class="legend-swatch legend-gate"></i>decision gate</span>
+            <span><i class="legend-swatch legend-fallback"></i>fallback para a issue</span>
+            <span><i class="legend-swatch legend-learning"></i>aprendizado contínuo</span>
+          </div>
           <div class="mermaid-wrap">
             <div class="mermaid" aria-label="Fluxo do harness de desenvolvimento com fallback do QA">
-flowchart LR
-    A["01 · Demanda / PO"] --> B["02 · Issue + business specification"]
-    B --> C["03 · Technical specification"]
-    C --> D{"04 · Esforço cognitivo"}
-    D --> E["05 · AI routing"]
-    E --> F["06 · Implementação"]
-    F --> G["07 · Pipeline verde"]
-    G --> H["08 · Homologação"]
-    H --> I{"09 · QA valida"}
-    I -->|aprovado| J["10 · Merge request"]
-    J --> K{"11 · PO valida"}
-    K -->|sim| L["12 · Production"]
-    I -->|reprovado| M["Evidência + comentário na issue"]
-    M --> N["Spec v2 / reespecificar"]
-    N --> C
-    K -->|ajustar| N
-    L --> O["13 · Improvement report"]
-    O --> P["ADR / nova issue / commit"]
-    P -. aprendizado .-> B
+flowchart TD
+    A["01 · PO / demanda"] --> B["02 · Issue criada"]
+    B --> C["03 · Business specification"]
+    C --> D["04 · Technical specification"]
+    D --> E{"05 · Esforço cognitivo"}
+    E --> F["06 · AI routing"]
+    F --> G["07 · Implementação"]
+    G --> H["08 · Pipeline verde"]
+    H --> I["09 · Homologação"]
+    I --> J{"10 · QA valida?"}
+    J -->|aprovado| K["11 · Merge request"]
+    K --> L{"12 · PO valida?"}
+    L -->|sim| M["13 · Production"]
+    M --> N["14 · Improvement report"]
+    N --> O["15 · ADR / nova issue / commit"]
+    J -->|reprovado| R["Registrar evidência"]
+    R --> S["Voltar à technical specification"]
+    S -. nova tentativa .-> E
+    L -->|ajustar| S
     classDef input fill:#eef6ff,stroke:#0b5cff,color:#07152e
     classDef gate fill:#fff4db,stroke:#f6bd4a,color:#07152e
     classDef delivery fill:#e9f9ef,stroke:#25d366,color:#07152e
     classDef fallback fill:#fff0eb,stroke:#ff6b4a,color:#07152e
     classDef learning fill:#f9edff,stroke:#e50068,color:#07152e
-    class A,B,C input
-    class D,I,K gate
-    class E,F,G,H,J,L delivery
-    class M,N fallback
-    class O,P learning
+    class A,B,C,D input
+    class E,J,L gate
+    class F,G,H,I,K,M delivery
+    class R,S fallback
+    class N,O learning
             </div>
+          </div>
+          <div class="flow-reading-guide">
+            <article><span>01</span><div><b>Comece no topo</b><p>PO, issue, business specification e technical specification formam o contrato do trabalho.</p></div></article>
+            <article><span>02</span><div><b>Siga o eixo central</b><p>AI routing, implementação, pipeline e homologação produzem evidência para a decisão.</p></div></article>
+            <article><span>03</span><div><b>Leia os desvios</b><p>QA e PO são gates. O fallback retorna à specification; o report alimenta a próxima issue.</p></div></article>
           </div>
           <p class="flow-fallback-note"><span>QA aprovado</span> segue para produção · <span>QA reprovado</span> retorna à specification · cada passo deixa comentário na issue.</p>
         </section>

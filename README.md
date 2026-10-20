@@ -18,6 +18,7 @@ Landing page navegável e apresentação curta baseadas no `Guia_111_Conceitos_D
 - Cada pattern segue Purpose, Problem, Solution, Structure, Example, Applicability, Implementation, Benefits, Trade-offs e Relations, com link para a fonte original.
 - Fluxo de trabalho: demanda, issue, especificação de negócio, especificação técnica, esforço cognitivo, escolha de IA, implementação, pipeline, homologação, QA, merge request, PO, produção e melhoria contínua.
 - Fluxo Mermaid navegável mostrando o caminho feliz, o fallback do QA para a specification e o loop de aprendizado após o `improvement report`.
+- Diagrama redesenhado para leitura guiada: legenda cromática, faixas por etapa, decision gates explícitos e cartões de orientação abaixo do Mermaid.
 - Fallback explícito: se o QA reprovar, a promoção para `main` é bloqueada, a evidência é comentada na issue, a especificação volta para revisão e a tentativa percorre o harness novamente.
 - Ledger de comentários da issue: cada transição registra ator, decisão, artefato, evidência, tentativa e próxima ação.
 - Antes do arquivamento, quatro agentes especializados geram um `issue improvement report` para PO, QA, harness e arquitetura, sem transformar aprendizado em bloqueio de entrega.

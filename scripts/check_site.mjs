@@ -38,6 +38,7 @@ const sourceItems = [...content.patternCatalog, ...content.solidPrinciples, ...c
 if (sourceItems.some((item) => !item.sourceUrl?.includes("refactoring.guru") || !item.refs?.length)) throw new Error("Item do catálogo sem origem ou bibliografia");
 if (!app.includes("data-pattern-id") || !app.includes("pattern-filter")) throw new Error("Interação do catálogo ausente");
 if (!index.includes('class="mermaid"')) throw new Error("Fluxo Mermaid ausente");
+if (!index.includes('class="flow-legend"') || !index.includes('class="flow-reading-guide"')) throw new Error("Guia de leitura do fluxo ausente");
 if (!app.includes("theme-accordion") || !app.includes("renderMermaid")) throw new Error("Sanfonas por tema ou renderização Mermaid ausentes");
 if (content.concepts[0].term !== "rate limit" || content.concepts[0].gloss !== "limite de requisições") throw new Error("Termo rate limit não está no formato solicitado");
 
