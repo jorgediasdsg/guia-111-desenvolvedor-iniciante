@@ -17,6 +17,7 @@ const references = [
   ["clean-architecture", "MARTIN, Robert C. Clean Architecture. Prentice Hall, 2017.", "https://www.pearson.com/en-us/subject-catalog/p/clean-architecture-a-craftsmans-guide-to-software-structure-and-design/P200000003347"],
   ["gof", "GAMMA, Erich et al. Design Patterns: Elements of Reusable Object-Oriented Software. Addison-Wesley, 1994.", "https://www.informit.com/store/design-patterns-elements-of-reusable-object-oriented-software-9780201633610"],
   ["refactoring", "FOWLER, Martin. Refactoring. 2. ed. Addison-Wesley, 2018.", "https://martinfowler.com/books/refactoring.html"],
+  ["refactoring-guru", "Refactoring.Guru. Refactoring, Design Patterns and code examples.", "https://refactoring.guru/pt-br"],
   ["ddd", "EVANS, Eric. Domain-Driven Design. Addison-Wesley, 2003.", "https://www.domainlanguage.com/ddd/"],
   ["agile-manifesto", "BECK, Kent et al. Manifesto for Agile Software Development. 2001.", "https://agilemanifesto.org/"],
   ["scrum-guide", "SCHWABER, Ken; SUTHERLAND, Jeff. The Scrum Guide. 2020.", "https://scrumguides.org/scrum-guide.html"],
@@ -83,6 +84,84 @@ const workflowStages = [
   { id: "qa", index: "10", label: "QA", actor: "Tester / QA", summary: "O QA valida a história do PO, a especificação de negócio e a especificação técnica em homologação.", artifact: "evidência de aceite", branch: "homolog" },
   { id: "mr", index: "11", label: "Merge request", actor: "Engenharia + PO", summary: "O QA registra a evidência, a engenharia abre o merge request e o PO revisa o resultado.", artifact: "MR aprovado", branch: "homolog" },
   { id: "production", index: "12", label: "Produção", actor: "PO + entrega", summary: "Com aceite, a mudança segue de homolog para produção com monitoramento e rollback disponível.", artifact: "release em produção", branch: "production" },
+  { id: "continuous-improvement", index: "13", label: "Melhoria contínua", actor: "Agentes especializados", summary: "Antes do arquivamento, o histórico vira um relatório acionável para PO, QA, harness e arquitetura.", artifact: "issue improvement report", branch: "post-release" },
+];
+
+const workflowBranches = [
+  { id: "qa-rejected", label: "QA reprova", actor: "Tester / QA", summary: "A evidência da falha fica registrada na issue e bloqueia a promoção para main.", artifact: "comentário de reprovação + evidência", returnTo: "technical-spec", branch: "homolog" },
+  { id: "spec-rework", label: "Reespecificar", actor: "PO + engenharia", summary: "A equipe corrige a business specification ou technical specification e inicia nova tentativa.", artifact: "spec v2 + tentativa 2", returnTo: "technical-spec", branch: "feature/issue-123" },
+];
+
+const issueCommentTemplate = [
+  { stage: "demand", role: "PO", template: "[DEMANDA] Objetivo, contexto e resultado esperado registrados." },
+  { stage: "issue", role: "PO + time", template: "[ISSUE] Escopo, links e critério de sucesso vinculados à issue #123." },
+  { stage: "business-spec", role: "PO", template: "[BUSINESS SPEC v1] Regras, cenários de aceite e limites do que não será feito." },
+  { stage: "technical-spec", role: "Engenharia", template: "[TECHNICAL SPEC v1] Contratos, dados, riscos, testes e estratégia de release." },
+  { stage: "effort", role: "Time", template: "[EFFORT] cognitive-effort: medium. Motivo: integração, risco e dependências listados." },
+  { stage: "model", role: "Orquestração", template: "[AI ROUTING] Modelo selecionado, contexto enviado, limites e revisão humana definidos." },
+  { stage: "build", role: "IA + engenharia", template: "[IMPLEMENTATION] Commit, decisões e testes associados à tentativa atual." },
+  { stage: "pipeline", role: "CI/CD", template: "[PIPELINE] Lint, testes, segurança, build e artefato: resultado + link da execução." },
+  { stage: "homolog", role: "Entrega", template: "[HOMOLOG] Artefato publicado em homologação. QA avisado com versão e dados de teste." },
+  { stage: "qa", role: "Tester / QA", template: "[QA] Resultado, evidências e relação com a business specification e a technical specification." },
+  { stage: "qa-rejected", role: "Tester / QA", template: "[QA REPROVADO] Promoção bloqueada. Falha, impacto, evidência e retorno para a spec: tentativa N." },
+  { stage: "spec-rework", role: "PO + engenharia", template: "[SPEC REWORK] Business specification ou technical specification revisada. Nova tentativa N autorizada para percorrer o harness." },
+  { stage: "mr", role: "Engenharia + PO", template: "[MR] Merge request criado. QA aprovou a evidência e PO iniciou validação final." },
+  { stage: "production", role: "PO + entrega", template: "[PRODUÇÃO] Release promovido de homolog para production. Monitoramento e rollback confirmados." },
+  { stage: "continuous-improvement", role: "Agentes especializados", template: "[IMPROVEMENT REPORT] Relatório gerado antes do arquivamento, com owners e próximas ações." },
+];
+
+const improvementAgents = [
+  { id: "po-spec", label: "PO specification agent", owner: "Produto", focus: "Ambiguidades, critérios de aceite e exemplos que permitiriam uma leitura mais precisa.", output: "sugestão de business specification + issue de melhoria" },
+  { id: "qa-spec", label: "QA specification agent", owner: "Qualidade", focus: "Tempo de validação, redundâncias, risco multi-tenant e limites coerentes de inputs.", output: "suíte de testes revisada + matriz de risco" },
+  { id: "harness", label: "Harness improvement agent", owner: "Orquestração", focus: "Repetições, prompts, handoffs, escolha de modelo e pontos que geraram retrabalho.", output: "mudança sugerida no harness + prompt Markdown" },
+  { id: "architecture", label: "Architecture agent", owner: "Principal engineer", focus: "Padrões recorrentes, acoplamento, contratos e oportunidades que valem mudança transversal.", output: "ADR ou commit arquitetural candidato" },
+];
+
+const didacticTemplate = [
+  { id: "purpose", label: "Purpose", description: "Para que este conceito existe no sistema." },
+  { id: "problem", label: "Problem", description: "Qual sintoma ou custo aparece sem ele." },
+  { id: "solution", label: "Solution", description: "Qual decisão ou padrão responde ao problema." },
+  { id: "structure", label: "Structure", description: "Quais partes participam da decisão e como elas se relacionam." },
+  { id: "example", label: "Example", description: "Um cenário reconhecível antes de abstrair." },
+  { id: "applicability", label: "Applicability", description: "Em quais contextos a decisão faz sentido e onde ela é excesso." },
+  { id: "how", label: "How to apply", description: "Passos pequenos para testar a decisão no contexto." },
+  { id: "implementation", label: "Implementation", description: "Como transformar a decisão em código, configuração ou prática operacional." },
+  { id: "benefits", label: "Benefits", description: "Que ganho observável justifica a mudança." },
+  { id: "code", label: "Code / checklist", description: "Um snippet copiável ou uma sequência operacional." },
+  { id: "tradeoffs", label: "Trade-offs", description: "O que a decisão custa, limita ou pode quebrar." },
+  { id: "anti-refactoring", label: "Anti-refactoring", description: "Quando não aplicar ou como evitar transformar a técnica em ritual." },
+  { id: "related", label: "Related", description: "Conceitos e referências que ampliam a leitura." },
+]; 
+
+const harnessArtifacts = [
+  {
+    id: "business-prompt",
+    label: "Prompt de negócio",
+    format: "Markdown",
+    description: "Entrada para o PO transformar intenção em regra, cenário e critério de aceite.",
+    copyText: `# Business specification\n\n## Objetivo\nDescreva o resultado que o usuário precisa alcançar.\n\n## Regras\n- Diga o que é obrigatório.\n- Diga o que fica fora do escopo.\n\n## Cenários de aceite\n- Dado um contexto coerente, quando a ação acontece, então o resultado observável aparece.\n\n## Limites\nDefina o espaço de inputs válido. Não transforme palavras infinitas em testes infinitos.`,
+  },
+  {
+    id: "technical-spec",
+    label: "Especificação técnica",
+    format: "Markdown",
+    description: "Contrato mínimo para a IA e a engenharia executarem a issue com rastreabilidade.",
+    copyText: `# Technical specification\n\n## Contrato\n- Entradas:\n- Saídas:\n- Erros:\n\n## Dados e tenant isolation\nDescreva a chave de tenant e como impedir vazamento entre contas.\n\n## Testes proporcionais ao risco\n- Baixo risco: happy path + limites principais.\n- Alto risco: isolamento, autorização, concorrência e recuperação.\n\n## Observabilidade\nDefina logs, métricas, traces e sinais de rollback.`,
+  },
+  {
+    id: "code-delivery",
+    label: "Possível entrega em código",
+    format: "JavaScript",
+    description: "Um exemplo curto de implementação que a IA pode produzir e a pipeline pode verificar.",
+    copyText: `export function canReadTenant(resource, actor) {\n  if (!resource || !actor) return false;\n  return resource.tenantId === actor.tenantId &&\n    actor.permissions.includes("read:resource");\n}\n\n// O teste deve provar isolamento entre dois tenants.`,
+  },
+  {
+    id: "improvement-report",
+    label: "Relatório da issue",
+    format: "Markdown",
+    description: "Saída dos agentes antes do arquivamento, pronta para virar issue, ADR ou commit.",
+    copyText: `# Issue improvement report\n\n## Evidência\n- Tentativas:\n- Tempo em QA:\n- Falhas repetidas:\n\n## Oportunidade\n- Frente: PO specification | QA specification | Harness | Architecture\n- Impacto:\n- Owner:\n- Prioridade:\n\n## Próxima ação\nCrie uma issue ou commit pequeno, com critério de aceite e prazo de revisão.`,
+  },
 ];
 
 const effortLevels = [
@@ -107,6 +186,140 @@ const architectureTracks = [
   { eyebrow: "Qualidade", title: "Design que aguenta mudança", body: "A arquitetura serve ao fluxo de entrega: contratos verificáveis, observabilidade, testes e uma estratégia de release que permita recuperar o sistema.", refs: ["release-it", "sre"] },
 ];
 
+const codeExamples = {
+  1: { language: "javascript", title: "rate-limit.js", code: String.raw`const windows = new Map();
+
+export function allowRequest(actorId, now = Date.now()) {
+  const windowStart = Math.floor(now / 60_000) * 60_000;
+  const key = actorId + ":" + windowStart;
+  const count = (windows.get(key) ?? 0) + 1;
+  windows.set(key, count);
+  return count <= 60;
+}` },
+  2: { language: "javascript", title: "cache.js", code: String.raw`const cache = new Map();
+
+export async function getCatalog(load, now = Date.now()) {
+  const hit = cache.get("catalog");
+  if (hit && hit.expiresAt > now) return hit.value;
+  const value = await load();
+  cache.set("catalog", { value, expiresAt: now + 60_000 });
+  return value;
+}` },
+  14: { language: "javascript", title: "idempotency.js", code: String.raw`export async function createOnce(key, store, create) {
+  const previous = await store.get(key);
+  if (previous) return previous;
+  const result = await create();
+  await store.put(key, result);
+  return result;
+}` },
+  25: { language: "sql", title: "database-index.sql", code: String.raw`CREATE INDEX idx_orders_tenant_created
+  ON orders (tenant_id, created_at DESC);
+
+SELECT *
+FROM orders
+WHERE tenant_id = :tenant_id
+ORDER BY created_at DESC;` },
+  36: { language: "sql", title: "optimistic-lock.sql", code: String.raw`UPDATE invoices
+SET status = :next_status,
+    version = version + 1
+WHERE id = :id
+  AND tenant_id = :tenant_id
+  AND version = :expected_version;
+
+-- zero rows means: someone changed it first` },
+  51: { language: "javascript", title: "feature-flag.js", code: String.raw`export function isEnabled(flags, tenantId, name) {
+  return flags[name]?.tenants?.includes(tenantId) === true;
+}
+
+if (isEnabled(flags, actor.tenantId, "new-checkout")) {
+  return renderNewCheckout();
+}
+return renderLegacyCheckout();` },
+  63: { language: "yaml", title: "slo.yaml", code: String.raw`service: checkout
+window: 30d
+indicator:
+  type: availability
+  target: 99.9%
+error_budget:
+  action: pause-risky-releases` },
+  78: { language: "javascript", title: "parameterized-query.js", code: String.raw`const result = await db.query(
+  "SELECT * FROM users WHERE email = $1",
+  [input.email]
+);
+
+// Never concatenate input into SQL.` },
+  84: { language: "bash", title: "backup-check.sh", code: String.raw`#!/usr/bin/env bash
+set -euo pipefail
+
+backup="backups/latest.sql"
+test -s "$backup"
+pg_restore --list "$backup" >/dev/null
+echo "backup is readable"` },
+  103: { language: "text", title: "semver.txt", code: String.raw`MAJOR.MINOR.PATCH
+
+MAJOR: contrato incompatível
+MINOR: capacidade compatível nova
+PATCH: correção compatível` },
+  109: { language: "markdown", title: "incident-comment.md", code: String.raw`[INCIDENT]
+- Impacto:
+- Início / detecção:
+- Hipótese atual:
+- Mitigação segura:
+- Próxima atualização:
+- Owner:` },
+};
+
+function buildApplication(concept) {
+  const specific = codeExamples[concept.number];
+  const code = specific ?? {
+    language: "markdown",
+    title: `${concept.term}.md`,
+    code: `# ${concept.term}\n\n1. Contexto: ${concept.example}\n2. Verificação: observe o sintoma descrito em "${concept.problem}".\n3. Ação: aplique a prática recomendada e registre a evidência.`,
+  };
+  const relatedNumbers = [concept.number > 1 ? concept.number - 1 : 2, concept.number < 111 ? concept.number + 1 : 110];
+  const related = relatedNumbers.map((number) => {
+    const [term] = termMap[number];
+    return { number, term };
+  });
+  const tradeoffs = concept.level === "BASE"
+    ? "Comece pequeno: meça o efeito e mantenha um rollback claro antes de ampliar a solução."
+    : concept.level === "CRESCIMENTO"
+      ? "Introduza quando carga, integração ou equipe justificarem o custo operacional."
+      : "Trate como decisão de arquitetura: documente falhas aceitas, operação, custo e recuperação.";
+  const steps = [
+    `Defina o contexto: ${concept.example}`,
+    `Observe o problema: ${concept.problem}`,
+    `Implemente a prática: ${concept.practice.split(".")[0]}.`,
+    "Rode a menor evidência que prova o comportamento e registre o resultado na issue.",
+  ];
+  return {
+    didactic: {
+      purpose: concept.what,
+      problem: concept.problem,
+      solution: concept.practice,
+      structure: `Contexto: ${concept.example} → decisão: ${concept.practice.split(".")[0]}. → evidência: ${concept.level === "AVANÇADO" ? "teste de integração, risco e recuperação" : "teste do comportamento e limites principais"}.`,
+      example: concept.example,
+      applicability: concept.level === "BASE"
+        ? "Use quando o sintoma já aparece no fluxo atual e a mudança puder ser validada com uma evidência pequena."
+        : "Use quando carga, integração, risco ou operação justificarem o custo; não introduza só por preferência arquitetural.",
+      how: steps.join(" "),
+      implementation: `Comece com ${code.title}, rode a evidência mínima e anexe o resultado à issue antes de ampliar a solução.`,
+      benefits: `Torna ${concept.term} uma decisão observável, com um critério de aceite claro e uma próxima ação que cabe na issue.`,
+      code: code.code,
+      tradeoffs,
+      antiRefactoring: `Não aplique ${concept.term} como ritual. Se o contexto não apresenta o problema descrito, mantenha a solução menor e registre a decisão.`,
+      related: related.map(({ number, term }) => `${String(number).padStart(3, "0")} ${term}`).join(" · "),
+      source: "refactoring-guru",
+    },
+    steps,
+    code: code.code,
+    language: code.language,
+    title: code.title,
+    hasSpecificCode: Boolean(specific),
+    related,
+  };
+}
+
 const concepts = parsePdfConcepts().map((concept) => {
   const [term, gloss] = termMap[concept.number];
   const [block, blockTitle] = blockFor(concept.number);
@@ -118,14 +331,15 @@ const concepts = parsePdfConcepts().map((concept) => {
     blockTitle,
     keywords: [concept.sourceTitle, term, gloss, blockTitle].join(" "),
     refs: referenceMap[concept.number],
+    application: buildApplication({ ...concept, term, gloss, blockTitle }),
   };
 });
 
-if (concepts.length !== 111 || concepts.some((concept) => !concept.refs?.length)) {
-  throw new Error("Dados editoriais incompletos: cada conceito precisa de termo e bibliografia");
+if (concepts.length !== 111 || concepts.some((concept) => !concept.refs?.length || !concept.application?.steps?.length)) {
+  throw new Error("Dados editoriais incompletos: cada conceito precisa de termo, bibliografia e aplicação");
 }
 
-const content = { references, concepts, workflowStages, effortLevels, modelOptions, architectureTracks };
+const content = { references, concepts, workflowStages, workflowBranches, issueCommentTemplate, improvementAgents, didacticTemplate, harnessArtifacts, effortLevels, modelOptions, architectureTracks };
 const output = `// Generated from the attached Guia_111_Conceitos_Desenvolvedor_Iniciante.pdf\nexport const content = ${JSON.stringify(content, null, 2)};\n`;
 fs.mkdirSync(path.dirname(outputPath), { recursive: true });
 fs.writeFileSync(outputPath, output);

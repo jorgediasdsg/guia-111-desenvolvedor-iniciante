@@ -20,6 +20,12 @@ function renderWorkflow() {
       <div class="step-meta"><span>${escapeHtml(stage.actor)}</span><span>${escapeHtml(stage.artifact)}</span><span>${escapeHtml(stage.branch)}</span></div>
     </article>
   `).join("");
+  $("#issue-ledger").innerHTML = content.issueCommentTemplate.map((comment, index) => `
+    <div class="ledger-row">
+      <span class="ledger-index">${String(index + 1).padStart(2, "0")}</span>
+      <div><b>${escapeHtml(comment.role)}</b><p>${escapeHtml(comment.template)}</p></div>
+    </div>
+  `).join("");
 }
 
 function renderRouting() {
@@ -45,6 +51,39 @@ function renderArchitecture() {
         return `<a href="#ref-${escapeHtml(ref.id)}">${escapeHtml(ref.id)}</a>`;
       }).join("")}</div>
     </article>
+  `).join("");
+}
+
+function renderImprovement() {
+  $("#improvement-grid").innerHTML = content.improvementAgents.map((agent, index) => `
+    <article class="improvement-card">
+      <div class="agent-number">0${index + 1}</div>
+      <div class="branch-label">${escapeHtml(agent.owner)}</div>
+      <h3>${escapeHtml(agent.label)}</h3>
+      <p>${escapeHtml(agent.focus)}</p>
+      <span class="improvement-output">→ ${escapeHtml(agent.output)}</span>
+    </article>
+  `).join("");
+  $("#report-preview").innerHTML = `
+    <div><span class="branch-label">ISSUE IMPROVEMENT REPORT</span><h3>Pronto para virar ação.</h3><p>O relatório não é uma ata. Ele termina com uma sugestão de mudança pequena, um owner e uma evidência de que o fluxo ficará melhor na próxima issue.</p></div>
+    <div class="report-fields"><span><b>evidência</b> tentativas, tempo, falhas</span><span><b>impacto</b> produto, QA, harness ou arquitetura</span><span><b>próxima ação</b> issue, ADR ou commit</span></div>
+  `;
+}
+
+function renderHarnessArtifacts() {
+  $("#artifact-grid").innerHTML = content.harnessArtifacts.map((artifact) => `
+    <article class="artifact-card">
+      <div class="artifact-head"><span class="branch-label">${escapeHtml(artifact.format)}</span><button class="copy-button" type="button" data-copy-artifact="${escapeHtml(artifact.id)}">copiar</button></div>
+      <h3>${escapeHtml(artifact.label)}</h3>
+      <p>${escapeHtml(artifact.description)}</p>
+      <pre><code>${escapeHtml(artifact.copyText)}</code></pre>
+    </article>
+  `).join("");
+}
+
+function renderDidacticModel() {
+  $("#didactic-steps").innerHTML = content.didacticTemplate.map((item, index) => `
+    <div class="didactic-step"><span>${String(index + 1).padStart(2, "0")}</span><div><b>${escapeHtml(item.label)}</b><p>${escapeHtml(item.description)}</p></div></div>
   `).join("");
 }
 
@@ -82,11 +121,35 @@ function renderConcepts() {
         <div class="copy-block"><b>Exemplo</b><p>${escapeHtml(concept.example)}</p></div>
         <div class="copy-block"><b>Prática recomendada</b><p>${escapeHtml(concept.practice)}</p></div>
       </div>
+      <details class="concept-application">
+        <summary><span>Aplicação guiada</span><small>${concept.application.hasSpecificCode ? "snippet copiável" : "checklist copiável"} · abrir</small></summary>
+        <div class="application-grid">
+          <div class="application-copy">
+            <div class="copy-block"><b>Purpose</b><p>${escapeHtml(concept.application.didactic.purpose)}</p></div>
+            <div class="copy-block"><b>Problem</b><p>${escapeHtml(concept.application.didactic.problem)}</p></div>
+            <div class="copy-block"><b>Solution</b><p>${escapeHtml(concept.application.didactic.solution)}</p></div>
+            <div class="copy-block"><b>Structure</b><p>${escapeHtml(concept.application.didactic.structure)}</p></div>
+            <div class="copy-block"><b>Example</b><p>${escapeHtml(concept.application.didactic.example)}</p></div>
+            <div class="copy-block"><b>Applicability</b><p>${escapeHtml(concept.application.didactic.applicability)}</p></div>
+            <div class="copy-block"><b>Implementation</b><p>${escapeHtml(concept.application.didactic.implementation)}</p></div>
+            <div class="copy-block"><b>Benefits</b><p>${escapeHtml(concept.application.didactic.benefits)}</p></div>
+            <div class="copy-block"><b>Trade-offs</b><p>${escapeHtml(concept.application.didactic.tradeoffs)}</p></div>
+            <div class="copy-block"><b>Anti-refactoring</b><p>${escapeHtml(concept.application.didactic.antiRefactoring)}</p></div>
+          </div>
+          <div class="application-code">
+            <div class="code-toolbar"><span>${escapeHtml(concept.application.title)}</span><button class="copy-button" type="button" data-copy-concept="${concept.number}">copiar</button></div>
+            <pre><code>${escapeHtml(concept.application.code)}</code></pre>
+          </div>
+          <div class="application-steps"><b>How to apply</b><ol>${concept.application.steps.map((step) => `<li>${escapeHtml(step)}</li>`).join("")}</ol></div>
+          <div class="application-related"><b>Related</b><p>${concept.application.related.map((related) => `<a href="#concept-${related.number}">${escapeHtml(related.term)}</a>`).join(" · ")}</p></div>
+        </div>
+      </details>
       <div class="concept-refs"><b>Bibliografia</b><ol>${referenceLinks(concept.refs)}</ol></div>
     </article>
   `).join("");
   $("#result-count").textContent = `${visible.length} ${visible.length === 1 ? "conceito" : "conceitos"}`;
   $("#empty-state").hidden = visible.length > 0;
+  bindCopyButtons();
 }
 
 function renderBlocks() {
@@ -101,6 +164,49 @@ function renderReferences() {
       <a href="${escapeHtml(url)}" target="_blank" rel="noreferrer">${escapeHtml(label)} ↗</a>
     </article>
   `).join("");
+}
+
+async function copyText(text, button) {
+  try {
+    if (navigator.clipboard?.writeText) {
+      await navigator.clipboard.writeText(text);
+    } else {
+      const textarea = document.createElement("textarea");
+      textarea.value = text;
+      textarea.style.position = "fixed";
+      textarea.style.opacity = "0";
+      document.body.append(textarea);
+      textarea.select();
+      document.execCommand("copy");
+      textarea.remove();
+    }
+    const original = button.textContent;
+    button.textContent = "copiado";
+    button.classList.add("is-copied");
+    window.setTimeout(() => { button.textContent = original; button.classList.remove("is-copied"); }, 1600);
+  } catch {
+    button.textContent = "selecione o bloco";
+    window.setTimeout(() => { button.textContent = "copiar"; }, 1800);
+  }
+}
+
+function bindCopyButtons() {
+  document.querySelectorAll("[data-copy-concept]").forEach((button) => {
+    if (button.dataset.copyBound) return;
+    button.dataset.copyBound = "true";
+    button.addEventListener("click", () => {
+      const concept = content.concepts.find((item) => item.number === Number(button.dataset.copyConcept));
+      if (concept) copyText(concept.application.code, button);
+    });
+  });
+  document.querySelectorAll("[data-copy-artifact]").forEach((button) => {
+    if (button.dataset.copyBound) return;
+    button.dataset.copyBound = "true";
+    button.addEventListener("click", () => {
+      const artifact = content.harnessArtifacts.find((item) => item.id === button.dataset.copyArtifact);
+      if (artifact) copyText(artifact.copyText, button);
+    });
+  });
 }
 
 function focusHashTarget() {
@@ -119,8 +225,12 @@ renderBlocks();
 renderWorkflow();
 renderRouting();
 renderArchitecture();
+renderImprovement();
+renderHarnessArtifacts();
+renderDidacticModel();
 renderConcepts();
 renderReferences();
+bindCopyButtons();
 
 $("#concept-search").addEventListener("input", renderConcepts);
 $("#block-filter").addEventListener("change", renderConcepts);

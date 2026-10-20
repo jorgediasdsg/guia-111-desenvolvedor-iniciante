@@ -72,6 +72,21 @@
           </div>
           <div class="workflow-track" id="workflow-track"></div>
           <div class="workflow-footnote"><span class="pulse"></span> A branch muda de contexto. A decisão continua registrada.</div>
+          <div class="workflow-loop-grid" id="issue-memory">
+            <article class="fallback-panel" id="qa-rejected">
+              <div class="branch-label">FALLBACK · QA REPROVADO</div>
+              <h3>Falhar aqui não encerra o ciclo. Redireciona o ciclo.</h3>
+              <p>O QA bloqueia a promoção para <code>main</code>, comenta a evidência na issue e devolve a mudança para a especificação que ficou incompleta.</p>
+              <div class="fallback-path"><span>QA</span><i>reprova</i><span>spec v2</span><i>harness</i><span>QA novamente</span></div>
+              <a class="text-link" href="#workflow-technical-spec">voltar para technical specification ↗</a>
+            </article>
+            <article class="issue-ledger-panel">
+              <div class="branch-label">ISSUE LEDGER</div>
+              <h3>A issue guarda cada tentativa.</h3>
+              <p>Comentário não é burocracia: é a memória de por que a solução mudou e qual evidência liberou o próximo passo.</p>
+              <div class="issue-ledger" id="issue-ledger"></div>
+            </article>
+          </div>
         </section>
 
         <section class="routing-section section-pad" id="model-routing">
@@ -105,10 +120,43 @@
           </div>
         </section>
 
+        <section class="continuous-section section-pad" id="continuous-improvement">
+          <div class="section-heading">
+            <div>
+              <div class="section-kicker">05 · antes de arquivar</div>
+              <h2>O produto segue. O processo aprende.</h2>
+            </div>
+            <p>Depois da produção, agentes especializados leem o histórico da issue e deixam um relatório pronto para virar uma nova issue, um ADR ou um commit do principal engineer.</p>
+          </div>
+          <div class="improvement-grid" id="improvement-grid"></div>
+          <div class="report-preview" id="report-preview"></div>
+        </section>
+
+        <section class="harness-section section-pad" id="harness-artifacts">
+          <div class="section-heading compact">
+            <div>
+              <div class="section-kicker">06 · artefatos do harness</div>
+              <h2>O método deixa material reutilizável.</h2>
+            </div>
+            <p>Prompt de negócio, especificação técnica, possível entrega em código e relatório de melhoria: tudo pode ser copiado, versionado e usado na próxima issue.</p>
+          </div>
+          <div class="artifact-grid" id="artifact-grid"></div>
+        </section>
+
+        <section class="didactic-section section-pad" id="didactic-model">
+          <div class="didactic-copy">
+            <div class="section-kicker">07 · como ensinar cada conceito</div>
+            <h2>Problema, solução, aplicação e limites no mesmo lugar.</h2>
+            <p>A leitura usa uma estrutura inspirada no Refactoring.Guru: começar pelo sintoma, mostrar a solução, apresentar um exemplo pequeno, explicar como aplicar e fechar com trade-offs e relações. A referência é um modelo de clareza, não uma fonte para copiar conteúdo.</p>
+            <a class="text-link" href="https://refactoring.guru/pt-br" target="_blank" rel="noreferrer">visitar Refactoring.Guru ↗</a>
+          </div>
+          <div class="didactic-steps" id="didactic-steps"></div>
+        </section>
+
         <section class="library-section section-pad" id="library">
           <div class="section-heading library-heading">
             <div>
-              <div class="section-kicker">05 · biblioteca viva</div>
+              <div class="section-kicker">08 · biblioteca viva</div>
               <h2>111 conceitos para consultar sem sair da página.</h2>
             </div>
             <p>Busque em inglês ou português. Filtre por bloco e por nível. Cada entrada aponta para a literatura que sustenta o assunto.</p>
@@ -134,7 +182,7 @@
         <section class="references-section section-pad" id="references">
           <div class="section-heading compact">
             <div>
-              <div class="section-kicker">06 · bibliografia</div>
+            <div class="section-kicker">09 · bibliografia</div>
               <h2>De onde continuar estudando.</h2>
             </div>
             <p>O guia combina livros, padrões, RFCs e documentação primária. As referências aparecem também dentro de cada conceito para preservar o contexto.</p>
