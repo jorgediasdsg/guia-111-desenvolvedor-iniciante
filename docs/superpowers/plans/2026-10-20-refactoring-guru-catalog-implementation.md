@@ -110,6 +110,6 @@
 
   Servir a raiz e confirmar HTTP 200, anchors, quantidade de patterns e links profundos no HTML entregue.
 
-- [ ] **Step 3: Commit, push e confirmar GitHub Pages**
+- [x] **Step 3: Commit, push e confirmar GitHub Pages**
 
   Publicar em `main`, esperar o workflow e confirmar HTTP 200 no endereço público.
