@@ -113,6 +113,6 @@
 
   Run `node --check` on all modules and `git diff --check`.
 
-- [ ] **Step 3: Commit, push and verify GitHub Pages**
+- [x] **Step 3: Commit, push and verify GitHub Pages**
 
   Push `main`, wait for Pages deployment, fetch the public URL with HTTP 200 and open it in the Codex panel.
