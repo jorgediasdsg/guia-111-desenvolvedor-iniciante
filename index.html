@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#111a3c" />
-    <meta name="description" content="Guia navegável com 111 conceitos de desenvolvimento de software e um fluxo de entrega em ciclo único com IA." />
+    <meta name="description" content="Guia navegável com 111 conceitos, 22 Design Patterns, SOLID, Clean Code, refactoring e um fluxo de entrega em ciclo único com IA." />
     <title>Guia 111 + Harness de desenvolvimento com IA</title>
     <link rel="stylesheet" href="assets/css/styles.css" />
   </head>
@@ -18,6 +18,7 @@
         <nav class="topnav" aria-label="Navegação principal">
           <a href="#workflow">O ciclo</a>
           <a href="#architecture">Arquitetura</a>
+          <a href="#refactoring-catalog">Patterns</a>
           <a href="#library">111 conceitos</a>
           <a href="apresentacao.html" class="nav-cta">Abrir slides <span aria-hidden="true">↗</span></a>
         </nav>
@@ -26,7 +27,7 @@
       <main>
         <section class="hero section-pad" id="top">
           <div class="hero-copy">
-            <p class="eyebrow"><span class="eyebrow-dot"></span> guia de consulta · 111 conceitos + harness de IA</p>
+            <p class="eyebrow"><span class="eyebrow-dot"></span> guia de consulta · 111 conceitos + patterns + harness de IA</p>
             <h1>Do primeiro código <span class="ink-highlight">à produção.</span></h1>
             <p class="hero-lede">Uma base técnica para conversar sobre software com clareza e um ciclo de entrega para transformar demanda em resultado verificável.</p>
             <div class="hero-actions">
@@ -120,10 +121,68 @@
           </div>
         </section>
 
+        <section class="catalog-section section-pad" id="refactoring-catalog">
+          <div class="section-heading">
+            <div>
+              <div class="section-kicker">05 · fonte de decisão</div>
+              <h2>Patterns para nomear o problema antes de codificar.</h2>
+            </div>
+            <p>Catálogo editorial dos 22 patterns clássicos. A ficha começa pelo problema e termina na fonte primária, na bibliografia e no limite de uso.</p>
+          </div>
+          <div class="source-strip" id="refactoring-sources"></div>
+          <div class="catalog-toolbar">
+            <label class="search-box" for="pattern-search"><span aria-hidden="true">⌕</span><input id="pattern-search" type="search" placeholder="Buscar Factory, Singleton, isolamento..." autocomplete="off" /></label>
+            <label class="select-box">Família<select id="pattern-filter"><option value="all">Todas</option></select></label>
+            <span class="result-count" id="pattern-count">22 patterns</span>
+          </div>
+          <div class="pattern-list" id="pattern-list"></div>
+        </section>
+
+        <section class="principles-section section-pad" id="solid-principles">
+          <div class="section-heading compact">
+            <div>
+              <div class="section-kicker">06 · princípios SOLID</div>
+              <h2>Clique no princípio. Leia o contrato.</h2>
+            </div>
+            <p>SOLID entra como instrumento de decisão: ajuda a encontrar o eixo de mudança, definir fronteiras e testar substituição sem virar checklist mecânico.</p>
+          </div>
+          <div class="principle-grid" id="solid-grid"></div>
+        </section>
+
+        <section class="clean-code-section section-pad" id="clean-code-principles">
+          <div class="section-heading compact">
+            <div>
+              <div class="section-kicker">07 · Clean Code</div>
+              <h2>Princípios para o código continuar legível.</h2>
+            </div>
+            <p>Uma seleção operacional para revisão e implementação: intenção clara, limites pequenos, testes como documentação e mudança proporcional ao risco.</p>
+          </div>
+          <div class="clean-code-grid" id="clean-code-grid"></div>
+        </section>
+
+        <section class="refactoring-catalog-section section-pad" id="refactoring-smells">
+          <div class="section-heading">
+            <div>
+              <div class="section-kicker">08 · refactoring</div>
+              <h2>Detectar o cheiro. Fazer uma mudança pequena.</h2>
+            </div>
+            <p>Code smells são sinais, não sentenças. As técnicas servem para reduzir custo de mudança com testes verdes e uma justificativa registrada na issue.</p>
+          </div>
+          <div class="catalog-toolbar">
+            <label class="search-box" for="refactoring-search"><span aria-hidden="true">⌕</span><input id="refactoring-search" type="search" placeholder="Buscar Long Method, Extract Class..." autocomplete="off" /></label>
+            <label class="select-box">Grupo<select id="refactoring-filter"><option value="all">Todos os grupos</option></select></label>
+            <span class="result-count" id="refactoring-count"></span>
+          </div>
+          <div class="subcatalog-heading"><span class="branch-label">CODE SMELLS</span><a class="text-link" href="https://refactoring.guru/pt-br/refactoring/smells" target="_blank" rel="noreferrer">abrir catálogo original ↗</a></div>
+          <div class="smell-list" id="smell-list"></div>
+          <div class="subcatalog-heading" id="refactoring-techniques"><span class="branch-label">REFACTORING TECHNIQUES</span><a class="text-link" href="https://refactoring.guru/pt-br/refactoring/techniques" target="_blank" rel="noreferrer">abrir técnicas originais ↗</a></div>
+          <div class="technique-list" id="technique-list"></div>
+        </section>
+
         <section class="continuous-section section-pad" id="continuous-improvement">
           <div class="section-heading">
             <div>
-              <div class="section-kicker">05 · antes de arquivar</div>
+              <div class="section-kicker">09 · antes de arquivar</div>
               <h2>O produto segue. O processo aprende.</h2>
             </div>
             <p>Depois da produção, agentes especializados leem o histórico da issue e deixam um relatório pronto para virar uma nova issue, um ADR ou um commit do principal engineer.</p>
@@ -135,7 +194,7 @@
         <section class="harness-section section-pad" id="harness-artifacts">
           <div class="section-heading compact">
             <div>
-              <div class="section-kicker">06 · artefatos do harness</div>
+              <div class="section-kicker">10 · artefatos do harness</div>
               <h2>O método deixa material reutilizável.</h2>
             </div>
             <p>Prompt de negócio, especificação técnica, possível entrega em código e relatório de melhoria: tudo pode ser copiado, versionado e usado na próxima issue.</p>
@@ -145,7 +204,7 @@
 
         <section class="didactic-section section-pad" id="didactic-model">
           <div class="didactic-copy">
-            <div class="section-kicker">07 · como ensinar cada conceito</div>
+            <div class="section-kicker">11 · como ensinar cada conceito</div>
             <h2>Problema, solução, aplicação e limites no mesmo lugar.</h2>
             <p>A leitura usa uma estrutura inspirada no Refactoring.Guru: começar pelo sintoma, mostrar a solução, apresentar um exemplo pequeno, explicar como aplicar e fechar com trade-offs e relações. A referência é um modelo de clareza, não uma fonte para copiar conteúdo.</p>
             <a class="text-link" href="https://refactoring.guru/pt-br" target="_blank" rel="noreferrer">visitar Refactoring.Guru ↗</a>
@@ -156,7 +215,7 @@
         <section class="library-section section-pad" id="library">
           <div class="section-heading library-heading">
             <div>
-              <div class="section-kicker">08 · biblioteca viva</div>
+              <div class="section-kicker">12 · biblioteca viva</div>
               <h2>111 conceitos para consultar sem sair da página.</h2>
             </div>
             <p>Busque em inglês ou português. Filtre por bloco e por nível. Cada entrada aponta para a literatura que sustenta o assunto.</p>
@@ -182,7 +241,7 @@
         <section class="references-section section-pad" id="references">
           <div class="section-heading compact">
             <div>
-            <div class="section-kicker">09 · bibliografia</div>
+            <div class="section-kicker">13 · bibliografia</div>
               <h2>De onde continuar estudando.</h2>
             </div>
             <p>O guia combina livros, padrões, RFCs e documentação primária. As referências aparecem também dentro de cada conceito para preservar o contexto.</p>

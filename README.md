@@ -13,6 +13,8 @@ Landing page navegável e apresentação curta baseadas no `Guia_111_Conceitos_D
 - 111 conceitos em inglês com glosa em português, busca client-side e filtros por bloco e nível.
 - Bibliografia contextual por conceito, com livros, RFCs e documentação primária.
 - Trilha de arquitetura com Gangue dos Quatro, Clean Code, Clean Architecture e DDD.
+- Catálogo navegável do Refactoring.Guru com 22 Design Patterns, SOLID, princípios operacionais de Clean Code, code smells e 66 refactoring techniques.
+- Cada pattern segue Purpose, Problem, Solution, Structure, Example, Applicability, Implementation, Benefits, Trade-offs e Relations, com link para a fonte original.
 - Fluxo de trabalho: demanda, issue, especificação de negócio, especificação técnica, esforço cognitivo, escolha de IA, implementação, pipeline, homologação, QA, merge request, PO, produção e melhoria contínua.
 - Fallback explícito: se o QA reprovar, a promoção para `main` é bloqueada, a evidência é comentada na issue, a especificação volta para revisão e a tentativa percorre o harness novamente.
 - Ledger de comentários da issue: cada transição registra ator, decisão, artefato, evidência, tentativa e próxima ação.

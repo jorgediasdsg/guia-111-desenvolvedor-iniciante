@@ -62,6 +62,31 @@ export const content = {
       "https://refactoring.guru/pt-br"
     ],
     [
+      "refactoring-patterns",
+      "Refactoring.Guru. Design Patterns catalog and pattern guides.",
+      "https://refactoring.guru/pt-br/design-patterns/catalog"
+    ],
+    [
+      "refactoring-pattern-structure",
+      "Refactoring.Guru. What is a design pattern?",
+      "https://refactoring.guru/pt-br/design-patterns/what-is-pattern"
+    ],
+    [
+      "refactoring-solid",
+      "Refactoring.Guru. SOLID principles in Dive Into Design Patterns.",
+      "https://refactoring.guru/pt-br/design-patterns/book"
+    ],
+    [
+      "refactoring-smells",
+      "Refactoring.Guru. Code smells catalog.",
+      "https://refactoring.guru/pt-br/refactoring/smells"
+    ],
+    [
+      "refactoring-techniques",
+      "Refactoring.Guru. Refactoring techniques catalog.",
+      "https://refactoring.guru/pt-br/refactoring/techniques"
+    ],
+    [
       "ddd",
       "EVANS, Eric. Domain-Driven Design. Addison-Wesley, 2003.",
       "https://www.domainlanguage.com/ddd/"
@@ -6858,38 +6883,2079 @@ export const content = {
   ],
   "architectureTracks": [
     {
+      "id": "gof",
       "eyebrow": "Gangue dos Quatro",
       "title": "Design Patterns",
-      "body": "Um vocabulário para reconhecer soluções recorrentes e discutir trade-offs sem transformar o padrão em receita. Use Adapter, Strategy, Factory, Observer e outros quando o contexto pedir.",
+      "body": "Um vocabulário para reconhecer soluções recorrentes e discutir trade-offs sem transformar o padrão em receita.",
       "refs": [
-        "gof"
+        "gof",
+        "refactoring-patterns"
+      ],
+      "deepLink": "#refactoring-catalog",
+      "details": [
+        {
+          "name": "22 patterns",
+          "body": "Criacionais, estruturais e comportamentais; cada um começa por um problema, não por uma classe pronta."
+        },
+        {
+          "name": "Como ler",
+          "body": "Purpose → problem → solution → structure → example → applicability → implementation → trade-offs → relations."
+        }
       ]
     },
     {
+      "id": "solid",
+      "eyebrow": "Design principles",
+      "title": "SOLID",
+      "body": "Cinco princípios para diminuir acoplamento, tornar mudanças localizadas e deixar contratos mais fáceis de testar.",
+      "refs": [
+        "clean-code",
+        "refactoring-solid"
+      ],
+      "deepLink": "#solid-principles",
+      "details": [
+        {
+          "name": "SRP",
+          "body": "Uma unidade deve ter um motivo principal para mudar."
+        },
+        {
+          "name": "OCP · LSP · ISP · DIP",
+          "body": "Extensões seguras, substituição correta, interfaces focadas e dependências apontando para abstrações."
+        }
+      ]
+    },
+    {
+      "id": "clean-code",
       "eyebrow": "Uncle Bob",
       "title": "Clean Code",
       "body": "Nomes claros, funções pequenas, dependências explícitas, testes legíveis e refatoração contínua reduzem o custo de mudar o sistema.",
       "refs": [
         "clean-code",
         "refactoring"
+      ],
+      "deepLink": "#clean-code-principles",
+      "details": [
+        {
+          "name": "Legibilidade",
+          "body": "Código deve revelar intenção sem exigir uma explicação paralela."
+        },
+        {
+          "name": "Mudança segura",
+          "body": "Pequenas funções, baixo acoplamento e testes transformam manutenção em uma sequência verificável."
+        }
       ]
     },
     {
+      "id": "clean-architecture",
       "eyebrow": "Arquitetura",
       "title": "Clean Architecture + DDD",
       "body": "Separe regras de negócio de detalhes de entrega, mantenha fronteiras explícitas e modele o domínio antes de espalhar complexidade entre frameworks.",
       "refs": [
         "clean-architecture",
         "ddd"
-      ]
+      ],
+      "deepLink": "#architecture"
     },
     {
+      "id": "quality",
       "eyebrow": "Qualidade",
       "title": "Design que aguenta mudança",
       "body": "A arquitetura serve ao fluxo de entrega: contratos verificáveis, observabilidade, testes e uma estratégia de release que permita recuperar o sistema.",
       "refs": [
         "release-it",
         "sre"
+      ],
+      "deepLink": "#workflow"
+    }
+  ],
+  "refactoringSources": [
+    {
+      "id": "patterns",
+      "label": "Design Patterns",
+      "url": "https://refactoring.guru/pt-br/design-patterns/catalog"
+    },
+    {
+      "id": "pattern-structure",
+      "label": "Estrutura de um pattern",
+      "url": "https://refactoring.guru/pt-br/design-patterns/what-is-pattern"
+    },
+    {
+      "id": "solid",
+      "label": "SOLID",
+      "url": "https://refactoring.guru/pt-br/design-patterns/book"
+    },
+    {
+      "id": "refactoring",
+      "label": "Refactoring",
+      "url": "https://refactoring.guru/pt-br/refactoring"
+    },
+    {
+      "id": "smells",
+      "label": "Code smells",
+      "url": "https://refactoring.guru/pt-br/refactoring/smells"
+    },
+    {
+      "id": "techniques",
+      "label": "Refactoring techniques",
+      "url": "https://refactoring.guru/pt-br/refactoring/techniques"
+    }
+  ],
+  "patternCatalog": [
+    {
+      "id": "factory-method",
+      "name": "Factory Method",
+      "category": "creational",
+      "categoryLabel": "Criacionais",
+      "summary": "Define um ponto de criação que permite às subclasses decidir qual produto concreto devolver.",
+      "problem": "O cliente conhece classes concretas demais e cada novo produto espalha condicionais pelo código.",
+      "solution": "Concentre a criação em um método substituível e faça o restante do fluxo depender do contrato do produto.",
+      "example": "Um fluxo de entrega cria diferentes notificadores sem conhecer SMTP, webhook ou fila.",
+      "applicability": "Use quando a criação varia, quando subclasses representam produtos ou quando a dependência concreta dificulta testes.",
+      "tradeoffs": "Reduz acoplamento, mas pode aumentar o número de subclasses e a indireção.",
+      "relations": "Abstract Factory · Template Method",
+      "code": "class Dialog {\\n  render() {\\n    const button = this.createButton();\\n    button.render();\\n  }\\n\\n  createButton() { throw new Error(\"subclass must choose the product\"); }\\n}\\n\\nclass WebDialog extends Dialog {\\n  createButton() { return new HtmlButton(); }\\n}",
+      "purpose": "Define um ponto de criação que permite às subclasses decidir qual produto concreto devolver.",
+      "structure": "Contrato estável para o cliente + parte variável isolada em composição, herança ou delegação. Em Factory Method, a estrutura deve tornar explícito o que muda e o que permanece.",
+      "implementation": "Comece pelo caso concreto que já existe, extraia apenas a variação observada, cubra o contrato com testes e registre o trade-off na issue.",
+      "benefits": "Torna a decisão nomeável, facilita revisão e diminui o custo de mudar a parte variável sem espalhar conhecimento pelo sistema.",
+      "language": "javascript",
+      "title": "factory-method.js",
+      "sourceUrl": "https://refactoring.guru/pt-br/design-patterns/factory-method",
+      "refs": [
+        "refactoring-patterns",
+        "refactoring-pattern-structure",
+        "gof"
+      ]
+    },
+    {
+      "id": "abstract-factory",
+      "name": "Abstract Factory",
+      "category": "creational",
+      "categoryLabel": "Criacionais",
+      "summary": "Cria famílias de objetos relacionados sem acoplar o cliente às classes concretas.",
+      "problem": "Uma combinação incompatível de produtos aparece quando o cliente instancia cada peça isoladamente.",
+      "solution": "Exponha uma fábrica por família e garanta que os produtos devolvidos compartilhem a mesma variante.",
+      "example": "Componentes de interface para tema claro/escuro ou integrações AWS/GCP com o mesmo contrato.",
+      "applicability": "Use quando há famílias de produtos que precisam permanecer consistentes entre si.",
+      "tradeoffs": "Protege compatibilidade, mas exige uma nova abstração para cada família e produto.",
+      "relations": "Factory Method · Builder · Singleton",
+      "purpose": "Cria famílias de objetos relacionados sem acoplar o cliente às classes concretas.",
+      "structure": "Contrato estável para o cliente + parte variável isolada em composição, herança ou delegação. Em Abstract Factory, a estrutura deve tornar explícito o que muda e o que permanece.",
+      "implementation": "Comece pelo caso concreto que já existe, extraia apenas a variação observada, cubra o contrato com testes e registre o trade-off na issue.",
+      "benefits": "Torna a decisão nomeável, facilita revisão e diminui o custo de mudar a parte variável sem espalhar conhecimento pelo sistema.",
+      "code": "# Abstract Factory\n\n1. Identifique a variação em Componentes de interface para tema claro/escuro ou integrações AWS/GCP com o mesmo contrato.\n2. Extraia o contrato comum e uma implementação pequena.\n3. Cubra o comportamento e registre a decisão na issue.",
+      "language": "markdown",
+      "title": "abstract-factory.md",
+      "sourceUrl": "https://refactoring.guru/pt-br/design-patterns/abstract-factory",
+      "refs": [
+        "refactoring-patterns",
+        "refactoring-pattern-structure",
+        "gof"
+      ]
+    },
+    {
+      "id": "builder",
+      "name": "Builder",
+      "category": "creational",
+      "categoryLabel": "Criacionais",
+      "summary": "Separa a construção passo a passo de um objeto complexo da representação final.",
+      "problem": "Construtores longos e combinações opcionais tornam a criação ilegível e fácil de invalidar.",
+      "solution": "Orquestre etapas em um builder e valide o resultado antes de entregá-lo ao cliente.",
+      "example": "Montagem de uma ordem com tenant, itens, descontos, endereço e política de entrega opcionais.",
+      "applicability": "Use quando há muitas opções, etapas ou representações diferentes do mesmo produto.",
+      "tradeoffs": "Melhora legibilidade, mas adiciona classes e pode ser excesso para objetos simples.",
+      "relations": "Abstract Factory · Composite · Singleton",
+      "purpose": "Separa a construção passo a passo de um objeto complexo da representação final.",
+      "structure": "Contrato estável para o cliente + parte variável isolada em composição, herança ou delegação. Em Builder, a estrutura deve tornar explícito o que muda e o que permanece.",
+      "implementation": "Comece pelo caso concreto que já existe, extraia apenas a variação observada, cubra o contrato com testes e registre o trade-off na issue.",
+      "benefits": "Torna a decisão nomeável, facilita revisão e diminui o custo de mudar a parte variável sem espalhar conhecimento pelo sistema.",
+      "code": "# Builder\n\n1. Identifique a variação em Montagem de uma ordem com tenant, itens, descontos, endereço e política de entrega opcionais.\n2. Extraia o contrato comum e uma implementação pequena.\n3. Cubra o comportamento e registre a decisão na issue.",
+      "language": "markdown",
+      "title": "builder.md",
+      "sourceUrl": "https://refactoring.guru/pt-br/design-patterns/builder",
+      "refs": [
+        "refactoring-patterns",
+        "refactoring-pattern-structure",
+        "gof"
+      ]
+    },
+    {
+      "id": "prototype",
+      "name": "Prototype",
+      "category": "creational",
+      "categoryLabel": "Criacionais",
+      "summary": "Cria novos objetos clonando uma instância-protótipo já configurada.",
+      "problem": "Construir um objeto a partir do zero é caro ou requer conhecer detalhes internos.",
+      "solution": "Defina uma operação de clonagem e copie um protótipo seguro para o novo contexto.",
+      "example": "Duplicação de um template de relatório com configurações base antes de personalizar o tenant.",
+      "applicability": "Use quando os objetos têm configuração rica ou quando a construção direta é custosa.",
+      "tradeoffs": "Evita reconstrução, mas cópia profunda, referências compartilhadas e identidade exigem cuidado.",
+      "relations": "Factory Method · Abstract Factory · Memento",
+      "purpose": "Cria novos objetos clonando uma instância-protótipo já configurada.",
+      "structure": "Contrato estável para o cliente + parte variável isolada em composição, herança ou delegação. Em Prototype, a estrutura deve tornar explícito o que muda e o que permanece.",
+      "implementation": "Comece pelo caso concreto que já existe, extraia apenas a variação observada, cubra o contrato com testes e registre o trade-off na issue.",
+      "benefits": "Torna a decisão nomeável, facilita revisão e diminui o custo de mudar a parte variável sem espalhar conhecimento pelo sistema.",
+      "code": "# Prototype\n\n1. Identifique a variação em Duplicação de um template de relatório com configurações base antes de personalizar o tenant.\n2. Extraia o contrato comum e uma implementação pequena.\n3. Cubra o comportamento e registre a decisão na issue.",
+      "language": "markdown",
+      "title": "prototype.md",
+      "sourceUrl": "https://refactoring.guru/pt-br/design-patterns/prototype",
+      "refs": [
+        "refactoring-patterns",
+        "refactoring-pattern-structure",
+        "gof"
+      ]
+    },
+    {
+      "id": "singleton",
+      "name": "Singleton",
+      "category": "creational",
+      "categoryLabel": "Criacionais",
+      "summary": "Garante uma única instância controlada e um ponto de acesso conhecido.",
+      "problem": "Um recurso compartilhado precisa de uma única coordenação, mas o construtor permite estados concorrentes.",
+      "solution": "Controle a criação e exponha o acesso por uma fronteira explícita, preferindo injeção quando possível.",
+      "example": "Um registry de configuração imutável carregado uma vez por processo.",
+      "applicability": "Use com parcimônia para recursos realmente únicos e bem delimitados; evite como variável global disfarçada.",
+      "tradeoffs": "Pode simplificar coordenação, mas dificulta testes, esconde dependências e exige cuidado com concorrência.",
+      "relations": "Facade · Flyweight · Abstract Factory",
+      "code": "class Config {\\n  static #instance;\\n  static get instance() { return (this.#instance ??= new Config()); }\\n  constructor() { if (Config.#instance) return Config.#instance; this.values = Object.freeze({ region: \"sa-east-1\" }); }\\n}",
+      "purpose": "Garante uma única instância controlada e um ponto de acesso conhecido.",
+      "structure": "Contrato estável para o cliente + parte variável isolada em composição, herança ou delegação. Em Singleton, a estrutura deve tornar explícito o que muda e o que permanece.",
+      "implementation": "Comece pelo caso concreto que já existe, extraia apenas a variação observada, cubra o contrato com testes e registre o trade-off na issue.",
+      "benefits": "Torna a decisão nomeável, facilita revisão e diminui o custo de mudar a parte variável sem espalhar conhecimento pelo sistema.",
+      "language": "javascript",
+      "title": "singleton.js",
+      "sourceUrl": "https://refactoring.guru/pt-br/design-patterns/singleton",
+      "refs": [
+        "refactoring-patterns",
+        "refactoring-pattern-structure",
+        "gof"
+      ]
+    },
+    {
+      "id": "adapter",
+      "name": "Adapter",
+      "category": "structural",
+      "categoryLabel": "Estruturais",
+      "summary": "Converte a interface de um objeto para outra interface esperada pelo cliente.",
+      "problem": "Uma dependência útil tem contrato incompatível com o código que precisa consumi-la.",
+      "solution": "Coloque a conversão em um objeto adaptador e preserve o contrato usado pelo cliente.",
+      "example": "Adaptar um SDK externo de pagamentos para o port de cobrança da aplicação.",
+      "applicability": "Use na borda entre sistemas, bibliotecas legadas e contratos próprios.",
+      "tradeoffs": "Isola mudança externa, mas cria uma camada que precisa acompanhar os dois contratos.",
+      "relations": "Facade · Bridge · Proxy",
+      "purpose": "Converte a interface de um objeto para outra interface esperada pelo cliente.",
+      "structure": "Contrato estável para o cliente + parte variável isolada em composição, herança ou delegação. Em Adapter, a estrutura deve tornar explícito o que muda e o que permanece.",
+      "implementation": "Comece pelo caso concreto que já existe, extraia apenas a variação observada, cubra o contrato com testes e registre o trade-off na issue.",
+      "benefits": "Torna a decisão nomeável, facilita revisão e diminui o custo de mudar a parte variável sem espalhar conhecimento pelo sistema.",
+      "code": "# Adapter\n\n1. Identifique a variação em Adaptar um SDK externo de pagamentos para o port de cobrança da aplicação.\n2. Extraia o contrato comum e uma implementação pequena.\n3. Cubra o comportamento e registre a decisão na issue.",
+      "language": "markdown",
+      "title": "adapter.md",
+      "sourceUrl": "https://refactoring.guru/pt-br/design-patterns/adapter",
+      "refs": [
+        "refactoring-patterns",
+        "refactoring-pattern-structure",
+        "gof"
+      ]
+    },
+    {
+      "id": "bridge",
+      "name": "Bridge",
+      "category": "structural",
+      "categoryLabel": "Estruturais",
+      "summary": "Separa uma abstração da implementação para que ambas evoluam independentemente.",
+      "problem": "Uma hierarquia combina dimensão de domínio e dimensão de infraestrutura, gerando muitas subclasses.",
+      "solution": "Divida as duas dimensões e faça a abstração delegar para uma implementação.",
+      "example": "Relatório e canal de entrega evoluem sem criar uma classe para cada combinação.",
+      "applicability": "Use quando duas dimensões variam em ritmos diferentes ou quando herança gera explosão combinatória.",
+      "tradeoffs": "Reduz combinações, mas exige interfaces e composição bem nomeadas.",
+      "relations": "Adapter · Strategy · State",
+      "purpose": "Separa uma abstração da implementação para que ambas evoluam independentemente.",
+      "structure": "Contrato estável para o cliente + parte variável isolada em composição, herança ou delegação. Em Bridge, a estrutura deve tornar explícito o que muda e o que permanece.",
+      "implementation": "Comece pelo caso concreto que já existe, extraia apenas a variação observada, cubra o contrato com testes e registre o trade-off na issue.",
+      "benefits": "Torna a decisão nomeável, facilita revisão e diminui o custo de mudar a parte variável sem espalhar conhecimento pelo sistema.",
+      "code": "# Bridge\n\n1. Identifique a variação em Relatório e canal de entrega evoluem sem criar uma classe para cada combinação.\n2. Extraia o contrato comum e uma implementação pequena.\n3. Cubra o comportamento e registre a decisão na issue.",
+      "language": "markdown",
+      "title": "bridge.md",
+      "sourceUrl": "https://refactoring.guru/pt-br/design-patterns/bridge",
+      "refs": [
+        "refactoring-patterns",
+        "refactoring-pattern-structure",
+        "gof"
+      ]
+    },
+    {
+      "id": "composite",
+      "name": "Composite",
+      "category": "structural",
+      "categoryLabel": "Estruturais",
+      "summary": "Compõe objetos em árvores e permite tratar folha e contêiner pelo mesmo contrato.",
+      "problem": "O cliente precisa distinguir grupos e itens individuais para executar a mesma operação.",
+      "solution": "Defina um componente comum e faça o contêiner delegar recursivamente para seus filhos.",
+      "example": "Permissões, pastas, menus ou componentes de uma tela organizados em árvore.",
+      "applicability": "Use quando a hierarquia parte-todo é central e operações devem atravessar a árvore.",
+      "tradeoffs": "Simplifica clientes, mas pode tornar o contrato amplo demais para folhas.",
+      "relations": "Iterator · Visitor · Builder",
+      "purpose": "Compõe objetos em árvores e permite tratar folha e contêiner pelo mesmo contrato.",
+      "structure": "Contrato estável para o cliente + parte variável isolada em composição, herança ou delegação. Em Composite, a estrutura deve tornar explícito o que muda e o que permanece.",
+      "implementation": "Comece pelo caso concreto que já existe, extraia apenas a variação observada, cubra o contrato com testes e registre o trade-off na issue.",
+      "benefits": "Torna a decisão nomeável, facilita revisão e diminui o custo de mudar a parte variável sem espalhar conhecimento pelo sistema.",
+      "code": "# Composite\n\n1. Identifique a variação em Permissões, pastas, menus ou componentes de uma tela organizados em árvore.\n2. Extraia o contrato comum e uma implementação pequena.\n3. Cubra o comportamento e registre a decisão na issue.",
+      "language": "markdown",
+      "title": "composite.md",
+      "sourceUrl": "https://refactoring.guru/pt-br/design-patterns/composite",
+      "refs": [
+        "refactoring-patterns",
+        "refactoring-pattern-structure",
+        "gof"
+      ]
+    },
+    {
+      "id": "decorator",
+      "name": "Decorator",
+      "category": "structural",
+      "categoryLabel": "Estruturais",
+      "summary": "Adiciona responsabilidades a um objeto por composição, sem criar uma subclasse para cada combinação.",
+      "problem": "Herança gera muitas variantes e mudanças de comportamento precisam ser combináveis em runtime.",
+      "solution": "Envolva o componente por objetos que respeitam o mesmo contrato e delegam com comportamento adicional.",
+      "example": "Adicionar métricas, retry e autorização a um client HTTP sem alterar o client base.",
+      "applicability": "Use quando responsabilidades opcionais precisam ser empilhadas ou removidas dinamicamente.",
+      "tradeoffs": "Flexível e aderente a SRP, mas a ordem das camadas pode ficar difícil de rastrear.",
+      "relations": "Chain of Responsibility · Proxy · Composite",
+      "purpose": "Adiciona responsabilidades a um objeto por composição, sem criar uma subclasse para cada combinação.",
+      "structure": "Contrato estável para o cliente + parte variável isolada em composição, herança ou delegação. Em Decorator, a estrutura deve tornar explícito o que muda e o que permanece.",
+      "implementation": "Comece pelo caso concreto que já existe, extraia apenas a variação observada, cubra o contrato com testes e registre o trade-off na issue.",
+      "benefits": "Torna a decisão nomeável, facilita revisão e diminui o custo de mudar a parte variável sem espalhar conhecimento pelo sistema.",
+      "code": "# Decorator\n\n1. Identifique a variação em Adicionar métricas, retry e autorização a um client HTTP sem alterar o client base.\n2. Extraia o contrato comum e uma implementação pequena.\n3. Cubra o comportamento e registre a decisão na issue.",
+      "language": "markdown",
+      "title": "decorator.md",
+      "sourceUrl": "https://refactoring.guru/pt-br/design-patterns/decorator",
+      "refs": [
+        "refactoring-patterns",
+        "refactoring-pattern-structure",
+        "gof"
+      ]
+    },
+    {
+      "id": "facade",
+      "name": "Facade",
+      "category": "structural",
+      "categoryLabel": "Estruturais",
+      "summary": "Oferece uma interface simples para um subsistema complexo.",
+      "problem": "Clientes conhecem detalhes demais e repetem a mesma sequência de chamadas de infraestrutura.",
+      "solution": "Crie uma fronteira orientada ao caso de uso que coordene o subsistema internamente.",
+      "example": "CheckoutFacade coordena estoque, pagamento, pedido e notificação.",
+      "applicability": "Use para reduzir acoplamento e preservar uma API de caso de uso estável.",
+      "tradeoffs": "Reduz complexidade externa, mas uma fachada pode virar um objeto grande se acumular regras.",
+      "relations": "Adapter · Mediator · Singleton",
+      "purpose": "Oferece uma interface simples para um subsistema complexo.",
+      "structure": "Contrato estável para o cliente + parte variável isolada em composição, herança ou delegação. Em Facade, a estrutura deve tornar explícito o que muda e o que permanece.",
+      "implementation": "Comece pelo caso concreto que já existe, extraia apenas a variação observada, cubra o contrato com testes e registre o trade-off na issue.",
+      "benefits": "Torna a decisão nomeável, facilita revisão e diminui o custo de mudar a parte variável sem espalhar conhecimento pelo sistema.",
+      "code": "# Facade\n\n1. Identifique a variação em CheckoutFacade coordena estoque, pagamento, pedido e notificação.\n2. Extraia o contrato comum e uma implementação pequena.\n3. Cubra o comportamento e registre a decisão na issue.",
+      "language": "markdown",
+      "title": "facade.md",
+      "sourceUrl": "https://refactoring.guru/pt-br/design-patterns/facade",
+      "refs": [
+        "refactoring-patterns",
+        "refactoring-pattern-structure",
+        "gof"
+      ]
+    },
+    {
+      "id": "flyweight",
+      "name": "Flyweight",
+      "category": "structural",
+      "categoryLabel": "Estruturais",
+      "summary": "Compartilha estado intrínseco entre muitos objetos para reduzir consumo de memória.",
+      "problem": "Milhões de objetos carregam a mesma parte imutável e a aplicação desperdiça recursos.",
+      "solution": "Separe estado compartilhável de estado contextual e reutilize instâncias por uma chave.",
+      "example": "Ícones, tokens ou metadados de catálogo compartilhados entre muitos tenants.",
+      "applicability": "Use depois de medir memória e confirmar repetição significativa de estado imutável.",
+      "tradeoffs": "Pode economizar memória, mas aumenta a complexidade e exige separar contexto com precisão.",
+      "relations": "Singleton · Proxy · Factory Method",
+      "purpose": "Compartilha estado intrínseco entre muitos objetos para reduzir consumo de memória.",
+      "structure": "Contrato estável para o cliente + parte variável isolada em composição, herança ou delegação. Em Flyweight, a estrutura deve tornar explícito o que muda e o que permanece.",
+      "implementation": "Comece pelo caso concreto que já existe, extraia apenas a variação observada, cubra o contrato com testes e registre o trade-off na issue.",
+      "benefits": "Torna a decisão nomeável, facilita revisão e diminui o custo de mudar a parte variável sem espalhar conhecimento pelo sistema.",
+      "code": "# Flyweight\n\n1. Identifique a variação em Ícones, tokens ou metadados de catálogo compartilhados entre muitos tenants.\n2. Extraia o contrato comum e uma implementação pequena.\n3. Cubra o comportamento e registre a decisão na issue.",
+      "language": "markdown",
+      "title": "flyweight.md",
+      "sourceUrl": "https://refactoring.guru/pt-br/design-patterns/flyweight",
+      "refs": [
+        "refactoring-patterns",
+        "refactoring-pattern-structure",
+        "gof"
+      ]
+    },
+    {
+      "id": "proxy",
+      "name": "Proxy",
+      "category": "structural",
+      "categoryLabel": "Estruturais",
+      "summary": "Fornece um substituto que controla o acesso ao objeto real.",
+      "problem": "Acesso direto precisa de lazy loading, autorização, cache, logging ou proteção de rede.",
+      "solution": "Implemente o mesmo contrato e intercepte a chamada antes ou depois de delegar.",
+      "example": "Um proxy de repositório valida tenant e registra latência antes de acessar o banco.",
+      "applicability": "Use em fronteiras de acesso, recursos remotos, caros ou sensíveis.",
+      "tradeoffs": "Centraliza controle, mas pode esconder custo de rede e criar efeitos inesperados.",
+      "relations": "Decorator · Adapter · Facade",
+      "purpose": "Fornece um substituto que controla o acesso ao objeto real.",
+      "structure": "Contrato estável para o cliente + parte variável isolada em composição, herança ou delegação. Em Proxy, a estrutura deve tornar explícito o que muda e o que permanece.",
+      "implementation": "Comece pelo caso concreto que já existe, extraia apenas a variação observada, cubra o contrato com testes e registre o trade-off na issue.",
+      "benefits": "Torna a decisão nomeável, facilita revisão e diminui o custo de mudar a parte variável sem espalhar conhecimento pelo sistema.",
+      "code": "# Proxy\n\n1. Identifique a variação em Um proxy de repositório valida tenant e registra latência antes de acessar o banco.\n2. Extraia o contrato comum e uma implementação pequena.\n3. Cubra o comportamento e registre a decisão na issue.",
+      "language": "markdown",
+      "title": "proxy.md",
+      "sourceUrl": "https://refactoring.guru/pt-br/design-patterns/proxy",
+      "refs": [
+        "refactoring-patterns",
+        "refactoring-pattern-structure",
+        "gof"
+      ]
+    },
+    {
+      "id": "chain-of-responsibility",
+      "name": "Chain of Responsibility",
+      "category": "behavioral",
+      "categoryLabel": "Comportamentais",
+      "summary": "Passa uma solicitação por uma cadeia de handlers até que um deles processe ou encaminhe.",
+      "problem": "Um único objeto conhece todas as regras e cresce com cada nova condição de tratamento.",
+      "solution": "Separe handlers pequenos e permita que cada um processe ou delegue ao próximo.",
+      "example": "Pipeline de autenticação, autorização, rate limit e validação de payload.",
+      "applicability": "Use quando a ordem de tratamento pode variar e o remetente não deve conhecer o receptor.",
+      "tradeoffs": "Flexível e extensível, mas a resposta pode ser difícil de rastrear se a cadeia for longa.",
+      "relations": "Command · Decorator · Mediator",
+      "purpose": "Passa uma solicitação por uma cadeia de handlers até que um deles processe ou encaminhe.",
+      "structure": "Contrato estável para o cliente + parte variável isolada em composição, herança ou delegação. Em Chain of Responsibility, a estrutura deve tornar explícito o que muda e o que permanece.",
+      "implementation": "Comece pelo caso concreto que já existe, extraia apenas a variação observada, cubra o contrato com testes e registre o trade-off na issue.",
+      "benefits": "Torna a decisão nomeável, facilita revisão e diminui o custo de mudar a parte variável sem espalhar conhecimento pelo sistema.",
+      "code": "# Chain of Responsibility\n\n1. Identifique a variação em Pipeline de autenticação, autorização, rate limit e validação de payload.\n2. Extraia o contrato comum e uma implementação pequena.\n3. Cubra o comportamento e registre a decisão na issue.",
+      "language": "markdown",
+      "title": "chain-of-responsibility.md",
+      "sourceUrl": "https://refactoring.guru/pt-br/design-patterns/chain-of-responsibility",
+      "refs": [
+        "refactoring-patterns",
+        "refactoring-pattern-structure",
+        "gof"
+      ]
+    },
+    {
+      "id": "command",
+      "name": "Command",
+      "category": "behavioral",
+      "categoryLabel": "Comportamentais",
+      "summary": "Transforma uma solicitação em um objeto que pode ser armazenado, enfileirado ou desfeito.",
+      "problem": "O invocador está acoplado ao método concreto e não consegue adiar ou registrar a ação.",
+      "solution": "Encapsule ação, parâmetros e contexto em um comando com execução explícita.",
+      "example": "Jobs de processamento, auditoria e retry de operações administrativas.",
+      "applicability": "Use quando precisa de fila, histórico, undo, auditoria ou execução desacoplada.",
+      "tradeoffs": "Facilita rastreabilidade, mas cria objetos e estados de execução adicionais.",
+      "relations": "Memento · Observer · Chain of Responsibility",
+      "purpose": "Transforma uma solicitação em um objeto que pode ser armazenado, enfileirado ou desfeito.",
+      "structure": "Contrato estável para o cliente + parte variável isolada em composição, herança ou delegação. Em Command, a estrutura deve tornar explícito o que muda e o que permanece.",
+      "implementation": "Comece pelo caso concreto que já existe, extraia apenas a variação observada, cubra o contrato com testes e registre o trade-off na issue.",
+      "benefits": "Torna a decisão nomeável, facilita revisão e diminui o custo de mudar a parte variável sem espalhar conhecimento pelo sistema.",
+      "code": "# Command\n\n1. Identifique a variação em Jobs de processamento, auditoria e retry de operações administrativas.\n2. Extraia o contrato comum e uma implementação pequena.\n3. Cubra o comportamento e registre a decisão na issue.",
+      "language": "markdown",
+      "title": "command.md",
+      "sourceUrl": "https://refactoring.guru/pt-br/design-patterns/command",
+      "refs": [
+        "refactoring-patterns",
+        "refactoring-pattern-structure",
+        "gof"
+      ]
+    },
+    {
+      "id": "iterator",
+      "name": "Iterator",
+      "category": "behavioral",
+      "categoryLabel": "Comportamentais",
+      "summary": "Percorre uma coleção sem expor sua estrutura interna.",
+      "problem": "Cada cliente conhece a estrutura da coleção e repete lógica de travessia.",
+      "solution": "Exponha um cursor ou protocolo uniforme de iteração.",
+      "example": "Percorrer resultados paginados sem revelar se a origem é banco, cache ou API.",
+      "applicability": "Use quando coleções têm estruturas diferentes ou quando a travessia precisa de política própria.",
+      "tradeoffs": "Isola representação, mas pode gerar alocações e estados de cursor.",
+      "relations": "Composite · Memento · Visitor",
+      "purpose": "Percorre uma coleção sem expor sua estrutura interna.",
+      "structure": "Contrato estável para o cliente + parte variável isolada em composição, herança ou delegação. Em Iterator, a estrutura deve tornar explícito o que muda e o que permanece.",
+      "implementation": "Comece pelo caso concreto que já existe, extraia apenas a variação observada, cubra o contrato com testes e registre o trade-off na issue.",
+      "benefits": "Torna a decisão nomeável, facilita revisão e diminui o custo de mudar a parte variável sem espalhar conhecimento pelo sistema.",
+      "code": "# Iterator\n\n1. Identifique a variação em Percorrer resultados paginados sem revelar se a origem é banco, cache ou API.\n2. Extraia o contrato comum e uma implementação pequena.\n3. Cubra o comportamento e registre a decisão na issue.",
+      "language": "markdown",
+      "title": "iterator.md",
+      "sourceUrl": "https://refactoring.guru/pt-br/design-patterns/iterator",
+      "refs": [
+        "refactoring-patterns",
+        "refactoring-pattern-structure",
+        "gof"
+      ]
+    },
+    {
+      "id": "mediator",
+      "name": "Mediator",
+      "category": "behavioral",
+      "categoryLabel": "Comportamentais",
+      "summary": "Centraliza a coordenação entre objetos que poderiam criar dependências cruzadas.",
+      "problem": "Componentes conversam diretamente e formam uma rede difícil de alterar.",
+      "solution": "Faça os componentes notificarem um mediador com regras de coordenação explícitas.",
+      "example": "Orquestrador de checkout coordenando formulário, estoque e pagamento.",
+      "applicability": "Use quando muitos objetos dependem uns dos outros e há uma política central de interação.",
+      "tradeoffs": "Reduz acoplamento lateral, mas o mediador pode virar um novo objeto complexo.",
+      "relations": "Facade · Observer · Command",
+      "purpose": "Centraliza a coordenação entre objetos que poderiam criar dependências cruzadas.",
+      "structure": "Contrato estável para o cliente + parte variável isolada em composição, herança ou delegação. Em Mediator, a estrutura deve tornar explícito o que muda e o que permanece.",
+      "implementation": "Comece pelo caso concreto que já existe, extraia apenas a variação observada, cubra o contrato com testes e registre o trade-off na issue.",
+      "benefits": "Torna a decisão nomeável, facilita revisão e diminui o custo de mudar a parte variável sem espalhar conhecimento pelo sistema.",
+      "code": "# Mediator\n\n1. Identifique a variação em Orquestrador de checkout coordenando formulário, estoque e pagamento.\n2. Extraia o contrato comum e uma implementação pequena.\n3. Cubra o comportamento e registre a decisão na issue.",
+      "language": "markdown",
+      "title": "mediator.md",
+      "sourceUrl": "https://refactoring.guru/pt-br/design-patterns/mediator",
+      "refs": [
+        "refactoring-patterns",
+        "refactoring-pattern-structure",
+        "gof"
+      ]
+    },
+    {
+      "id": "memento",
+      "name": "Memento",
+      "category": "behavioral",
+      "categoryLabel": "Comportamentais",
+      "summary": "Salva e restaura o estado de um objeto sem expor seus detalhes internos.",
+      "problem": "Undo, rollback local ou snapshot exige acessar campos privados do objeto.",
+      "solution": "O próprio objeto cria um snapshot e um caretaker decide quando armazená-lo.",
+      "example": "Rascunho de configuração que pode ser revertido antes de publicar.",
+      "applicability": "Use quando o estado precisa de restauração e os invariantes devem continuar protegidos.",
+      "tradeoffs": "Preserva encapsulamento, mas snapshots podem consumir memória e ficar obsoletos.",
+      "relations": "Command · Prototype · Iterator",
+      "purpose": "Salva e restaura o estado de um objeto sem expor seus detalhes internos.",
+      "structure": "Contrato estável para o cliente + parte variável isolada em composição, herança ou delegação. Em Memento, a estrutura deve tornar explícito o que muda e o que permanece.",
+      "implementation": "Comece pelo caso concreto que já existe, extraia apenas a variação observada, cubra o contrato com testes e registre o trade-off na issue.",
+      "benefits": "Torna a decisão nomeável, facilita revisão e diminui o custo de mudar a parte variável sem espalhar conhecimento pelo sistema.",
+      "code": "# Memento\n\n1. Identifique a variação em Rascunho de configuração que pode ser revertido antes de publicar.\n2. Extraia o contrato comum e uma implementação pequena.\n3. Cubra o comportamento e registre a decisão na issue.",
+      "language": "markdown",
+      "title": "memento.md",
+      "sourceUrl": "https://refactoring.guru/pt-br/design-patterns/memento",
+      "refs": [
+        "refactoring-patterns",
+        "refactoring-pattern-structure",
+        "gof"
+      ]
+    },
+    {
+      "id": "observer",
+      "name": "Observer",
+      "category": "behavioral",
+      "categoryLabel": "Comportamentais",
+      "summary": "Notifica assinantes quando o estado ou evento de um objeto muda.",
+      "problem": "O produtor conhece consumidores específicos e cada novo consumidor exige alteração no produtor.",
+      "solution": "Defina uma assinatura explícita e publique eventos para observadores independentes.",
+      "example": "Mudança de pedido dispara atualização de projeção, e-mail e métricas.",
+      "applicability": "Use para eventos assíncronos ou reações múltiplas, com contrato de entrega bem definido.",
+      "tradeoffs": "Desacopla produtores, mas aumenta a dificuldade de ordenar, depurar e repetir eventos.",
+      "relations": "Mediator · State · Chain of Responsibility",
+      "purpose": "Notifica assinantes quando o estado ou evento de um objeto muda.",
+      "structure": "Contrato estável para o cliente + parte variável isolada em composição, herança ou delegação. Em Observer, a estrutura deve tornar explícito o que muda e o que permanece.",
+      "implementation": "Comece pelo caso concreto que já existe, extraia apenas a variação observada, cubra o contrato com testes e registre o trade-off na issue.",
+      "benefits": "Torna a decisão nomeável, facilita revisão e diminui o custo de mudar a parte variável sem espalhar conhecimento pelo sistema.",
+      "code": "# Observer\n\n1. Identifique a variação em Mudança de pedido dispara atualização de projeção, e-mail e métricas.\n2. Extraia o contrato comum e uma implementação pequena.\n3. Cubra o comportamento e registre a decisão na issue.",
+      "language": "markdown",
+      "title": "observer.md",
+      "sourceUrl": "https://refactoring.guru/pt-br/design-patterns/observer",
+      "refs": [
+        "refactoring-patterns",
+        "refactoring-pattern-structure",
+        "gof"
+      ]
+    },
+    {
+      "id": "state",
+      "name": "State",
+      "category": "behavioral",
+      "categoryLabel": "Comportamentais",
+      "summary": "Permite alterar o comportamento de um objeto quando seu estado interno muda.",
+      "problem": "Condicionais de estado crescem e misturam transições com regras de cada estado.",
+      "solution": "Modele cada estado como um objeto e delegue comportamento e transições.",
+      "example": "Pedido com estados draft, approved, paid, cancelled e regras diferentes por fase.",
+      "applicability": "Use quando há estados relevantes, transições claras e comportamento dependente da fase.",
+      "tradeoffs": "Organiza máquinas de estado, mas pode ser excesso para poucas transições simples.",
+      "relations": "Strategy · Bridge · Memento",
+      "purpose": "Permite alterar o comportamento de um objeto quando seu estado interno muda.",
+      "structure": "Contrato estável para o cliente + parte variável isolada em composição, herança ou delegação. Em State, a estrutura deve tornar explícito o que muda e o que permanece.",
+      "implementation": "Comece pelo caso concreto que já existe, extraia apenas a variação observada, cubra o contrato com testes e registre o trade-off na issue.",
+      "benefits": "Torna a decisão nomeável, facilita revisão e diminui o custo de mudar a parte variável sem espalhar conhecimento pelo sistema.",
+      "code": "# State\n\n1. Identifique a variação em Pedido com estados draft, approved, paid, cancelled e regras diferentes por fase.\n2. Extraia o contrato comum e uma implementação pequena.\n3. Cubra o comportamento e registre a decisão na issue.",
+      "language": "markdown",
+      "title": "state.md",
+      "sourceUrl": "https://refactoring.guru/pt-br/design-patterns/state",
+      "refs": [
+        "refactoring-patterns",
+        "refactoring-pattern-structure",
+        "gof"
+      ]
+    },
+    {
+      "id": "strategy",
+      "name": "Strategy",
+      "category": "behavioral",
+      "categoryLabel": "Comportamentais",
+      "summary": "Define uma família de algoritmos intercambiáveis sob um contrato comum.",
+      "problem": "Uma classe acumula ifs para cada política ou algoritmo e fica difícil de testar.",
+      "solution": "Extraia cada algoritmo para uma estratégia e injete a escolha no contexto.",
+      "example": "Cálculo de frete, roteamento ou política de cobrança por tenant.",
+      "applicability": "Use quando variantes de uma decisão mudam independentemente do fluxo principal.",
+      "tradeoffs": "Facilita extensão e testes, mas adiciona objetos e uma decisão de composição.",
+      "relations": "State · Bridge · Factory Method",
+      "purpose": "Define uma família de algoritmos intercambiáveis sob um contrato comum.",
+      "structure": "Contrato estável para o cliente + parte variável isolada em composição, herança ou delegação. Em Strategy, a estrutura deve tornar explícito o que muda e o que permanece.",
+      "implementation": "Comece pelo caso concreto que já existe, extraia apenas a variação observada, cubra o contrato com testes e registre o trade-off na issue.",
+      "benefits": "Torna a decisão nomeável, facilita revisão e diminui o custo de mudar a parte variável sem espalhar conhecimento pelo sistema.",
+      "code": "# Strategy\n\n1. Identifique a variação em Cálculo de frete, roteamento ou política de cobrança por tenant.\n2. Extraia o contrato comum e uma implementação pequena.\n3. Cubra o comportamento e registre a decisão na issue.",
+      "language": "markdown",
+      "title": "strategy.md",
+      "sourceUrl": "https://refactoring.guru/pt-br/design-patterns/strategy",
+      "refs": [
+        "refactoring-patterns",
+        "refactoring-pattern-structure",
+        "gof"
+      ]
+    },
+    {
+      "id": "template-method",
+      "name": "Template Method",
+      "category": "behavioral",
+      "categoryLabel": "Comportamentais",
+      "summary": "Define o esqueleto de um algoritmo e deixa etapas variáveis para subclasses ou hooks.",
+      "problem": "Fluxos parecidos duplicam a sequência geral e divergem nos detalhes.",
+      "solution": "Fixe a ordem do algoritmo e ofereça pontos de extensão controlados.",
+      "example": "Pipeline de importação que mantém validação e observabilidade, mas muda a leitura por formato.",
+      "applicability": "Use quando a sequência é estável e poucas etapas variam.",
+      "tradeoffs": "Reutiliza o fluxo, mas herança pode limitar composição e acoplar subclasses à base.",
+      "relations": "Factory Method · Strategy · Command",
+      "purpose": "Define o esqueleto de um algoritmo e deixa etapas variáveis para subclasses ou hooks.",
+      "structure": "Contrato estável para o cliente + parte variável isolada em composição, herança ou delegação. Em Template Method, a estrutura deve tornar explícito o que muda e o que permanece.",
+      "implementation": "Comece pelo caso concreto que já existe, extraia apenas a variação observada, cubra o contrato com testes e registre o trade-off na issue.",
+      "benefits": "Torna a decisão nomeável, facilita revisão e diminui o custo de mudar a parte variável sem espalhar conhecimento pelo sistema.",
+      "code": "# Template Method\n\n1. Identifique a variação em Pipeline de importação que mantém validação e observabilidade, mas muda a leitura por formato.\n2. Extraia o contrato comum e uma implementação pequena.\n3. Cubra o comportamento e registre a decisão na issue.",
+      "language": "markdown",
+      "title": "template-method.md",
+      "sourceUrl": "https://refactoring.guru/pt-br/design-patterns/template-method",
+      "refs": [
+        "refactoring-patterns",
+        "refactoring-pattern-structure",
+        "gof"
+      ]
+    },
+    {
+      "id": "visitor",
+      "name": "Visitor",
+      "category": "behavioral",
+      "categoryLabel": "Comportamentais",
+      "summary": "Separa operações de uma estrutura de objetos para adicionar comportamentos sem alterar suas classes.",
+      "problem": "Uma hierarquia está estável, mas novas operações fariam todas as classes crescerem.",
+      "solution": "Defina um visitante com uma operação por tipo e aceite-o nos elementos.",
+      "example": "Exportar diferentes nós de uma árvore de domínio para relatório ou auditoria.",
+      "applicability": "Use quando a estrutura varia pouco e as operações sobre ela variam muito.",
+      "tradeoffs": "Facilita novas operações, mas torna novos tipos de elemento mais custosos.",
+      "relations": "Composite · Iterator · Memento",
+      "purpose": "Separa operações de uma estrutura de objetos para adicionar comportamentos sem alterar suas classes.",
+      "structure": "Contrato estável para o cliente + parte variável isolada em composição, herança ou delegação. Em Visitor, a estrutura deve tornar explícito o que muda e o que permanece.",
+      "implementation": "Comece pelo caso concreto que já existe, extraia apenas a variação observada, cubra o contrato com testes e registre o trade-off na issue.",
+      "benefits": "Torna a decisão nomeável, facilita revisão e diminui o custo de mudar a parte variável sem espalhar conhecimento pelo sistema.",
+      "code": "# Visitor\n\n1. Identifique a variação em Exportar diferentes nós de uma árvore de domínio para relatório ou auditoria.\n2. Extraia o contrato comum e uma implementação pequena.\n3. Cubra o comportamento e registre a decisão na issue.",
+      "language": "markdown",
+      "title": "visitor.md",
+      "sourceUrl": "https://refactoring.guru/pt-br/design-patterns/visitor",
+      "refs": [
+        "refactoring-patterns",
+        "refactoring-pattern-structure",
+        "gof"
+      ]
+    }
+  ],
+  "solidPrinciples": [
+    {
+      "id": "single-responsibility",
+      "name": "Single Responsibility Principle",
+      "acronym": "S",
+      "summary": "Uma unidade de código deve ter um motivo principal para mudar.",
+      "problem": "Uma classe reúne regras de negócio, persistência, apresentação e integração, fazendo mudanças diferentes colidirem.",
+      "rule": "Separe responsabilidades que mudam por razões diferentes e mantenha cada fronteira com um contrato claro.",
+      "example": "OrderService calcula o pedido; OrderRepository persiste; NotificationPublisher comunica a mudança.",
+      "tradeoffs": "Pode criar mais arquivos, mas torna testes, ownership e mudança mais localizados.",
+      "sourceUrl": "https://refactoring.guru/pt-br/design-patterns/book",
+      "refs": [
+        "refactoring-solid",
+        "clean-code",
+        "clean-architecture"
+      ]
+    },
+    {
+      "id": "open-closed",
+      "name": "Open/Closed Principle",
+      "acronym": "O",
+      "summary": "Módulos devem aceitar extensão sem exigir alterações frequentes no código estável.",
+      "problem": "Cada novo tipo exige editar um switch central e reabrir uma área que já funcionava.",
+      "rule": "Encontre o eixo de variação, defina uma abstração e adicione novos comportamentos atrás dela.",
+      "example": "Adicionar uma estratégia de cálculo de frete sem editar o checkout principal.",
+      "tradeoffs": "Reduz regressões, mas abstrações prematuras podem esconder um domínio que ainda não amadureceu.",
+      "sourceUrl": "https://refactoring.guru/pt-br/design-patterns/book",
+      "refs": [
+        "refactoring-solid",
+        "clean-code",
+        "clean-architecture"
+      ]
+    },
+    {
+      "id": "liskov-substitution",
+      "name": "Liskov Substitution Principle",
+      "acronym": "L",
+      "summary": "Implementações de um contrato devem poder substituir a abstração sem quebrar expectativas válidas.",
+      "problem": "Subclasses lançam exceções inesperadas, ignoram pré-condições ou devolvem semântica diferente.",
+      "rule": "Modele contratos que todas as implementações realmente conseguem cumprir e teste invariantes.",
+      "example": "Um repositório de leitura não promete escrita só porque outra implementação promete.",
+      "tradeoffs": "Contratos mais honestos podem resultar em interfaces menores e menos hierarquia.",
+      "sourceUrl": "https://refactoring.guru/pt-br/design-patterns/book",
+      "refs": [
+        "refactoring-solid",
+        "clean-code",
+        "clean-architecture"
+      ]
+    },
+    {
+      "id": "interface-segregation",
+      "name": "Interface Segregation Principle",
+      "acronym": "I",
+      "summary": "Clientes não devem depender de métodos que não usam.",
+      "problem": "Uma interface grande força adaptadores e implementações a carregarem capacidades irrelevantes.",
+      "rule": "Separe interfaces por papel do cliente e faça cada dependência pedir apenas o que precisa.",
+      "example": "ReadOnlyCatalog e CatalogWriter em vez de uma interface única de catálogo.",
+      "tradeoffs": "Diminui acoplamento, mas exige cuidar do número e do vocabulário das interfaces.",
+      "sourceUrl": "https://refactoring.guru/pt-br/design-patterns/book",
+      "refs": [
+        "refactoring-solid",
+        "clean-code",
+        "clean-architecture"
+      ]
+    },
+    {
+      "id": "dependency-inversion",
+      "name": "Dependency Inversion Principle",
+      "acronym": "D",
+      "summary": "Regras de alto nível e detalhes devem depender de abstrações estáveis, não uns dos outros.",
+      "problem": "A regra de negócio importa SDK, banco ou framework e fica difícil testar sem infraestrutura.",
+      "rule": "Defina ports próximos ao caso de uso e injete adapters nos limites.",
+      "example": "Checkout depende de PaymentGateway; StripeAdapter implementa esse contrato fora do domínio.",
+      "tradeoffs": "Aumenta testabilidade e substituição, mas requer disciplina para não criar abstrações vazias.",
+      "sourceUrl": "https://refactoring.guru/pt-br/design-patterns/book",
+      "refs": [
+        "refactoring-solid",
+        "clean-code",
+        "clean-architecture"
+      ]
+    }
+  ],
+  "cleanCodePrinciples": [
+    {
+      "id": "meaningful-names",
+      "name": "Meaningful names",
+      "summary": "Nomes devem revelar intenção, contexto e unidade.",
+      "example": "expiresAt comunica mais que value2; tenantId comunica escopo que id não comunica.",
+      "problem": "Código difícil de ler aumenta tempo de validação, risco de regressão e custo de onboarding.",
+      "tradeoffs": "Clareza é uma decisão contínua; não justifica abstração ornamental nem refactoring sem evidência.",
+      "sourceUrl": "https://refactoring.guru/pt-br/refactoring",
+      "refs": [
+        "clean-code",
+        "refactoring",
+        "refactoring-guru"
+      ]
+    },
+    {
+      "id": "small-functions",
+      "name": "Small functions",
+      "summary": "Funções pequenas, com uma responsabilidade e baixo nível de abstração por vez.",
+      "example": "Separar validarPedido, calcularTotal e persistirPedido em vez de um método com 80 linhas.",
+      "problem": "Código difícil de ler aumenta tempo de validação, risco de regressão e custo de onboarding.",
+      "tradeoffs": "Clareza é uma decisão contínua; não justifica abstração ornamental nem refactoring sem evidência.",
+      "sourceUrl": "https://refactoring.guru/pt-br/refactoring",
+      "refs": [
+        "clean-code",
+        "refactoring",
+        "refactoring-guru"
+      ]
+    },
+    {
+      "id": "single-level-of-abstraction",
+      "name": "Single level of abstraction",
+      "summary": "Um método deve contar uma história em um nível de detalhe coerente.",
+      "example": "O caso de uso coordena; o parser e o repositório escondem detalhes próprios.",
+      "problem": "Código difícil de ler aumenta tempo de validação, risco de regressão e custo de onboarding.",
+      "tradeoffs": "Clareza é uma decisão contínua; não justifica abstração ornamental nem refactoring sem evidência.",
+      "sourceUrl": "https://refactoring.guru/pt-br/refactoring",
+      "refs": [
+        "clean-code",
+        "refactoring",
+        "refactoring-guru"
+      ]
+    },
+    {
+      "id": "error-handling",
+      "name": "Error handling",
+      "summary": "Erros devem ser tratados com contexto, contratos claros e sem esconder falhas.",
+      "example": "Mapear timeout de pagamento para erro de domínio observável e preservado no log.",
+      "problem": "Código difícil de ler aumenta tempo de validação, risco de regressão e custo de onboarding.",
+      "tradeoffs": "Clareza é uma decisão contínua; não justifica abstração ornamental nem refactoring sem evidência.",
+      "sourceUrl": "https://refactoring.guru/pt-br/refactoring",
+      "refs": [
+        "clean-code",
+        "refactoring",
+        "refactoring-guru"
+      ]
+    },
+    {
+      "id": "comments",
+      "name": "Comments with a job",
+      "summary": "Comentários explicam intenção, restrição ou contexto que o código não consegue expressar.",
+      "example": "Registrar por que uma janela de rate limit existe, não narrar o que a linha já diz.",
+      "problem": "Código difícil de ler aumenta tempo de validação, risco de regressão e custo de onboarding.",
+      "tradeoffs": "Clareza é uma decisão contínua; não justifica abstração ornamental nem refactoring sem evidência.",
+      "sourceUrl": "https://refactoring.guru/pt-br/refactoring",
+      "refs": [
+        "clean-code",
+        "refactoring",
+        "refactoring-guru"
+      ]
+    },
+    {
+      "id": "duplication",
+      "name": "One source of truth",
+      "summary": "Duplicação cria pontos de mudança que podem divergir silenciosamente.",
+      "example": "Centralizar regra de tenant isolation em uma policy testada, não repetir if em handlers.",
+      "problem": "Código difícil de ler aumenta tempo de validação, risco de regressão e custo de onboarding.",
+      "tradeoffs": "Clareza é uma decisão contínua; não justifica abstração ornamental nem refactoring sem evidência.",
+      "sourceUrl": "https://refactoring.guru/pt-br/refactoring",
+      "refs": [
+        "clean-code",
+        "refactoring",
+        "refactoring-guru"
+      ]
+    },
+    {
+      "id": "boundaries",
+      "name": "Clean boundaries",
+      "summary": "Dependências e integrações devem ter fronteiras nomeadas e substituíveis.",
+      "example": "SDK externo atrás de um adapter, com contrato próprio e testes de contrato.",
+      "problem": "Código difícil de ler aumenta tempo de validação, risco de regressão e custo de onboarding.",
+      "tradeoffs": "Clareza é uma decisão contínua; não justifica abstração ornamental nem refactoring sem evidência.",
+      "sourceUrl": "https://refactoring.guru/pt-br/refactoring",
+      "refs": [
+        "clean-code",
+        "refactoring",
+        "refactoring-guru"
+      ]
+    },
+    {
+      "id": "tests-as-documentation",
+      "name": "Tests as documentation",
+      "summary": "Testes legíveis registram comportamento, limites e intenção do sistema.",
+      "example": "Um teste nomeado mostra que um tenant nunca lê dados de outro tenant.",
+      "problem": "Código difícil de ler aumenta tempo de validação, risco de regressão e custo de onboarding.",
+      "tradeoffs": "Clareza é uma decisão contínua; não justifica abstração ornamental nem refactoring sem evidência.",
+      "sourceUrl": "https://refactoring.guru/pt-br/refactoring",
+      "refs": [
+        "clean-code",
+        "refactoring",
+        "refactoring-guru"
+      ]
+    },
+    {
+      "id": "formatting",
+      "name": "Consistent formatting",
+      "summary": "Formato consistente reduz ruído visual e deixa a revisão focar na decisão.",
+      "example": "Lint e formatter automatizados na pipeline, sem debate manual sobre estilo.",
+      "problem": "Código difícil de ler aumenta tempo de validação, risco de regressão e custo de onboarding.",
+      "tradeoffs": "Clareza é uma decisão contínua; não justifica abstração ornamental nem refactoring sem evidência.",
+      "sourceUrl": "https://refactoring.guru/pt-br/refactoring",
+      "refs": [
+        "clean-code",
+        "refactoring",
+        "refactoring-guru"
+      ]
+    },
+    {
+      "id": "boy-scout-rule",
+      "name": "Leave the code better",
+      "summary": "Ao tocar uma área, faça uma melhoria pequena e verificável sem ampliar o escopo sem controle.",
+      "example": "Extrair um nome ruim enquanto implementa a issue, registrando a mudança no comentário.",
+      "problem": "Código difícil de ler aumenta tempo de validação, risco de regressão e custo de onboarding.",
+      "tradeoffs": "Clareza é uma decisão contínua; não justifica abstração ornamental nem refactoring sem evidência.",
+      "sourceUrl": "https://refactoring.guru/pt-br/refactoring",
+      "refs": [
+        "clean-code",
+        "refactoring",
+        "refactoring-guru"
+      ]
+    }
+  ],
+  "refactoringSmells": [
+    {
+      "id": "smell-long-method",
+      "name": "Long Method",
+      "group": "Bloaters",
+      "symptom": "O código apresenta o sintoma Long Method e fica mais difícil de entender, testar ou mudar com segurança.",
+      "response": "Confirme o comportamento com testes, escolha uma refactoring pequena e observe se o acoplamento ou a duplicação realmente diminuem.",
+      "sourceUrl": "https://refactoring.guru/pt-br/refactoring/smells",
+      "refs": [
+        "refactoring-smells",
+        "refactoring",
+        "clean-code"
+      ]
+    },
+    {
+      "id": "smell-large-class",
+      "name": "Large Class",
+      "group": "Bloaters",
+      "symptom": "O código apresenta o sintoma Large Class e fica mais difícil de entender, testar ou mudar com segurança.",
+      "response": "Confirme o comportamento com testes, escolha uma refactoring pequena e observe se o acoplamento ou a duplicação realmente diminuem.",
+      "sourceUrl": "https://refactoring.guru/pt-br/refactoring/smells",
+      "refs": [
+        "refactoring-smells",
+        "refactoring",
+        "clean-code"
+      ]
+    },
+    {
+      "id": "smell-primitive-obsession",
+      "name": "Primitive Obsession",
+      "group": "Bloaters",
+      "symptom": "O código apresenta o sintoma Primitive Obsession e fica mais difícil de entender, testar ou mudar com segurança.",
+      "response": "Confirme o comportamento com testes, escolha uma refactoring pequena e observe se o acoplamento ou a duplicação realmente diminuem.",
+      "sourceUrl": "https://refactoring.guru/pt-br/refactoring/smells",
+      "refs": [
+        "refactoring-smells",
+        "refactoring",
+        "clean-code"
+      ]
+    },
+    {
+      "id": "smell-long-parameter-list",
+      "name": "Long Parameter List",
+      "group": "Bloaters",
+      "symptom": "O código apresenta o sintoma Long Parameter List e fica mais difícil de entender, testar ou mudar com segurança.",
+      "response": "Confirme o comportamento com testes, escolha uma refactoring pequena e observe se o acoplamento ou a duplicação realmente diminuem.",
+      "sourceUrl": "https://refactoring.guru/pt-br/refactoring/smells",
+      "refs": [
+        "refactoring-smells",
+        "refactoring",
+        "clean-code"
+      ]
+    },
+    {
+      "id": "smell-data-clumps",
+      "name": "Data Clumps",
+      "group": "Bloaters",
+      "symptom": "O código apresenta o sintoma Data Clumps e fica mais difícil de entender, testar ou mudar com segurança.",
+      "response": "Confirme o comportamento com testes, escolha uma refactoring pequena e observe se o acoplamento ou a duplicação realmente diminuem.",
+      "sourceUrl": "https://refactoring.guru/pt-br/refactoring/smells",
+      "refs": [
+        "refactoring-smells",
+        "refactoring",
+        "clean-code"
+      ]
+    },
+    {
+      "id": "smell-switch-statements",
+      "name": "Switch Statements",
+      "group": "Object-Orientation Abusers",
+      "symptom": "O código apresenta o sintoma Switch Statements e fica mais difícil de entender, testar ou mudar com segurança.",
+      "response": "Confirme o comportamento com testes, escolha uma refactoring pequena e observe se o acoplamento ou a duplicação realmente diminuem.",
+      "sourceUrl": "https://refactoring.guru/pt-br/refactoring/smells",
+      "refs": [
+        "refactoring-smells",
+        "refactoring",
+        "clean-code"
+      ]
+    },
+    {
+      "id": "smell-temporary-field",
+      "name": "Temporary Field",
+      "group": "Object-Orientation Abusers",
+      "symptom": "O código apresenta o sintoma Temporary Field e fica mais difícil de entender, testar ou mudar com segurança.",
+      "response": "Confirme o comportamento com testes, escolha uma refactoring pequena e observe se o acoplamento ou a duplicação realmente diminuem.",
+      "sourceUrl": "https://refactoring.guru/pt-br/refactoring/smells",
+      "refs": [
+        "refactoring-smells",
+        "refactoring",
+        "clean-code"
+      ]
+    },
+    {
+      "id": "smell-refused-bequest",
+      "name": "Refused Bequest",
+      "group": "Object-Orientation Abusers",
+      "symptom": "O código apresenta o sintoma Refused Bequest e fica mais difícil de entender, testar ou mudar com segurança.",
+      "response": "Confirme o comportamento com testes, escolha uma refactoring pequena e observe se o acoplamento ou a duplicação realmente diminuem.",
+      "sourceUrl": "https://refactoring.guru/pt-br/refactoring/smells",
+      "refs": [
+        "refactoring-smells",
+        "refactoring",
+        "clean-code"
+      ]
+    },
+    {
+      "id": "smell-alternative-classes-with-different-interfaces",
+      "name": "Alternative Classes with Different Interfaces",
+      "group": "Object-Orientation Abusers",
+      "symptom": "O código apresenta o sintoma Alternative Classes with Different Interfaces e fica mais difícil de entender, testar ou mudar com segurança.",
+      "response": "Confirme o comportamento com testes, escolha uma refactoring pequena e observe se o acoplamento ou a duplicação realmente diminuem.",
+      "sourceUrl": "https://refactoring.guru/pt-br/refactoring/smells",
+      "refs": [
+        "refactoring-smells",
+        "refactoring",
+        "clean-code"
+      ]
+    },
+    {
+      "id": "smell-divergent-change",
+      "name": "Divergent Change",
+      "group": "Change Preventers",
+      "symptom": "O código apresenta o sintoma Divergent Change e fica mais difícil de entender, testar ou mudar com segurança.",
+      "response": "Confirme o comportamento com testes, escolha uma refactoring pequena e observe se o acoplamento ou a duplicação realmente diminuem.",
+      "sourceUrl": "https://refactoring.guru/pt-br/refactoring/smells",
+      "refs": [
+        "refactoring-smells",
+        "refactoring",
+        "clean-code"
+      ]
+    },
+    {
+      "id": "smell-shotgun-surgery",
+      "name": "Shotgun Surgery",
+      "group": "Change Preventers",
+      "symptom": "O código apresenta o sintoma Shotgun Surgery e fica mais difícil de entender, testar ou mudar com segurança.",
+      "response": "Confirme o comportamento com testes, escolha uma refactoring pequena e observe se o acoplamento ou a duplicação realmente diminuem.",
+      "sourceUrl": "https://refactoring.guru/pt-br/refactoring/smells",
+      "refs": [
+        "refactoring-smells",
+        "refactoring",
+        "clean-code"
+      ]
+    },
+    {
+      "id": "smell-parallel-inheritance-hierarchies",
+      "name": "Parallel Inheritance Hierarchies",
+      "group": "Change Preventers",
+      "symptom": "O código apresenta o sintoma Parallel Inheritance Hierarchies e fica mais difícil de entender, testar ou mudar com segurança.",
+      "response": "Confirme o comportamento com testes, escolha uma refactoring pequena e observe se o acoplamento ou a duplicação realmente diminuem.",
+      "sourceUrl": "https://refactoring.guru/pt-br/refactoring/smells",
+      "refs": [
+        "refactoring-smells",
+        "refactoring",
+        "clean-code"
+      ]
+    },
+    {
+      "id": "smell-comments",
+      "name": "Comments",
+      "group": "Dispensables",
+      "symptom": "O código apresenta o sintoma Comments e fica mais difícil de entender, testar ou mudar com segurança.",
+      "response": "Confirme o comportamento com testes, escolha uma refactoring pequena e observe se o acoplamento ou a duplicação realmente diminuem.",
+      "sourceUrl": "https://refactoring.guru/pt-br/refactoring/smells",
+      "refs": [
+        "refactoring-smells",
+        "refactoring",
+        "clean-code"
+      ]
+    },
+    {
+      "id": "smell-duplicate-code",
+      "name": "Duplicate Code",
+      "group": "Dispensables",
+      "symptom": "O código apresenta o sintoma Duplicate Code e fica mais difícil de entender, testar ou mudar com segurança.",
+      "response": "Confirme o comportamento com testes, escolha uma refactoring pequena e observe se o acoplamento ou a duplicação realmente diminuem.",
+      "sourceUrl": "https://refactoring.guru/pt-br/refactoring/smells",
+      "refs": [
+        "refactoring-smells",
+        "refactoring",
+        "clean-code"
+      ]
+    },
+    {
+      "id": "smell-lazy-class",
+      "name": "Lazy Class",
+      "group": "Dispensables",
+      "symptom": "O código apresenta o sintoma Lazy Class e fica mais difícil de entender, testar ou mudar com segurança.",
+      "response": "Confirme o comportamento com testes, escolha uma refactoring pequena e observe se o acoplamento ou a duplicação realmente diminuem.",
+      "sourceUrl": "https://refactoring.guru/pt-br/refactoring/smells",
+      "refs": [
+        "refactoring-smells",
+        "refactoring",
+        "clean-code"
+      ]
+    },
+    {
+      "id": "smell-data-class",
+      "name": "Data Class",
+      "group": "Dispensables",
+      "symptom": "O código apresenta o sintoma Data Class e fica mais difícil de entender, testar ou mudar com segurança.",
+      "response": "Confirme o comportamento com testes, escolha uma refactoring pequena e observe se o acoplamento ou a duplicação realmente diminuem.",
+      "sourceUrl": "https://refactoring.guru/pt-br/refactoring/smells",
+      "refs": [
+        "refactoring-smells",
+        "refactoring",
+        "clean-code"
+      ]
+    },
+    {
+      "id": "smell-dead-code",
+      "name": "Dead Code",
+      "group": "Dispensables",
+      "symptom": "O código apresenta o sintoma Dead Code e fica mais difícil de entender, testar ou mudar com segurança.",
+      "response": "Confirme o comportamento com testes, escolha uma refactoring pequena e observe se o acoplamento ou a duplicação realmente diminuem.",
+      "sourceUrl": "https://refactoring.guru/pt-br/refactoring/smells",
+      "refs": [
+        "refactoring-smells",
+        "refactoring",
+        "clean-code"
+      ]
+    },
+    {
+      "id": "smell-speculative-generality",
+      "name": "Speculative Generality",
+      "group": "Dispensables",
+      "symptom": "O código apresenta o sintoma Speculative Generality e fica mais difícil de entender, testar ou mudar com segurança.",
+      "response": "Confirme o comportamento com testes, escolha uma refactoring pequena e observe se o acoplamento ou a duplicação realmente diminuem.",
+      "sourceUrl": "https://refactoring.guru/pt-br/refactoring/smells",
+      "refs": [
+        "refactoring-smells",
+        "refactoring",
+        "clean-code"
+      ]
+    },
+    {
+      "id": "smell-feature-envy",
+      "name": "Feature Envy",
+      "group": "Couplers",
+      "symptom": "O código apresenta o sintoma Feature Envy e fica mais difícil de entender, testar ou mudar com segurança.",
+      "response": "Confirme o comportamento com testes, escolha uma refactoring pequena e observe se o acoplamento ou a duplicação realmente diminuem.",
+      "sourceUrl": "https://refactoring.guru/pt-br/refactoring/smells",
+      "refs": [
+        "refactoring-smells",
+        "refactoring",
+        "clean-code"
+      ]
+    },
+    {
+      "id": "smell-inappropriate-intimacy",
+      "name": "Inappropriate Intimacy",
+      "group": "Couplers",
+      "symptom": "O código apresenta o sintoma Inappropriate Intimacy e fica mais difícil de entender, testar ou mudar com segurança.",
+      "response": "Confirme o comportamento com testes, escolha uma refactoring pequena e observe se o acoplamento ou a duplicação realmente diminuem.",
+      "sourceUrl": "https://refactoring.guru/pt-br/refactoring/smells",
+      "refs": [
+        "refactoring-smells",
+        "refactoring",
+        "clean-code"
+      ]
+    },
+    {
+      "id": "smell-message-chains",
+      "name": "Message Chains",
+      "group": "Couplers",
+      "symptom": "O código apresenta o sintoma Message Chains e fica mais difícil de entender, testar ou mudar com segurança.",
+      "response": "Confirme o comportamento com testes, escolha uma refactoring pequena e observe se o acoplamento ou a duplicação realmente diminuem.",
+      "sourceUrl": "https://refactoring.guru/pt-br/refactoring/smells",
+      "refs": [
+        "refactoring-smells",
+        "refactoring",
+        "clean-code"
+      ]
+    },
+    {
+      "id": "smell-middle-man",
+      "name": "Middle Man",
+      "group": "Couplers",
+      "symptom": "O código apresenta o sintoma Middle Man e fica mais difícil de entender, testar ou mudar com segurança.",
+      "response": "Confirme o comportamento com testes, escolha uma refactoring pequena e observe se o acoplamento ou a duplicação realmente diminuem.",
+      "sourceUrl": "https://refactoring.guru/pt-br/refactoring/smells",
+      "refs": [
+        "refactoring-smells",
+        "refactoring",
+        "clean-code"
+      ]
+    },
+    {
+      "id": "smell-incomplete-library-class",
+      "name": "Incomplete Library Class",
+      "group": "Other Smells",
+      "symptom": "O código apresenta o sintoma Incomplete Library Class e fica mais difícil de entender, testar ou mudar com segurança.",
+      "response": "Confirme o comportamento com testes, escolha uma refactoring pequena e observe se o acoplamento ou a duplicação realmente diminuem.",
+      "sourceUrl": "https://refactoring.guru/pt-br/refactoring/smells",
+      "refs": [
+        "refactoring-smells",
+        "refactoring",
+        "clean-code"
+      ]
+    }
+  ],
+  "refactoringTechniques": [
+    {
+      "id": "technique-extract-method",
+      "name": "Extract Method",
+      "group": "Composing Methods",
+      "symptom": "A técnica Extract Method responde a uma forma recorrente de acoplamento, duplicação ou complexidade estrutural.",
+      "response": "Faça uma mudança pequena, mantenha o comportamento coberto por testes e pare quando a evidência mostrar que o custo caiu.",
+      "sourceUrl": "https://refactoring.guru/pt-br/refactoring/techniques",
+      "refs": [
+        "refactoring-techniques",
+        "refactoring",
+        "clean-code"
+      ]
+    },
+    {
+      "id": "technique-inline-method",
+      "name": "Inline Method",
+      "group": "Composing Methods",
+      "symptom": "A técnica Inline Method responde a uma forma recorrente de acoplamento, duplicação ou complexidade estrutural.",
+      "response": "Faça uma mudança pequena, mantenha o comportamento coberto por testes e pare quando a evidência mostrar que o custo caiu.",
+      "sourceUrl": "https://refactoring.guru/pt-br/refactoring/techniques",
+      "refs": [
+        "refactoring-techniques",
+        "refactoring",
+        "clean-code"
+      ]
+    },
+    {
+      "id": "technique-extract-variable",
+      "name": "Extract Variable",
+      "group": "Composing Methods",
+      "symptom": "A técnica Extract Variable responde a uma forma recorrente de acoplamento, duplicação ou complexidade estrutural.",
+      "response": "Faça uma mudança pequena, mantenha o comportamento coberto por testes e pare quando a evidência mostrar que o custo caiu.",
+      "sourceUrl": "https://refactoring.guru/pt-br/refactoring/techniques",
+      "refs": [
+        "refactoring-techniques",
+        "refactoring",
+        "clean-code"
+      ]
+    },
+    {
+      "id": "technique-inline-temp",
+      "name": "Inline Temp",
+      "group": "Composing Methods",
+      "symptom": "A técnica Inline Temp responde a uma forma recorrente de acoplamento, duplicação ou complexidade estrutural.",
+      "response": "Faça uma mudança pequena, mantenha o comportamento coberto por testes e pare quando a evidência mostrar que o custo caiu.",
+      "sourceUrl": "https://refactoring.guru/pt-br/refactoring/techniques",
+      "refs": [
+        "refactoring-techniques",
+        "refactoring",
+        "clean-code"
+      ]
+    },
+    {
+      "id": "technique-replace-temp-with-query",
+      "name": "Replace Temp with Query",
+      "group": "Composing Methods",
+      "symptom": "A técnica Replace Temp with Query responde a uma forma recorrente de acoplamento, duplicação ou complexidade estrutural.",
+      "response": "Faça uma mudança pequena, mantenha o comportamento coberto por testes e pare quando a evidência mostrar que o custo caiu.",
+      "sourceUrl": "https://refactoring.guru/pt-br/refactoring/techniques",
+      "refs": [
+        "refactoring-techniques",
+        "refactoring",
+        "clean-code"
+      ]
+    },
+    {
+      "id": "technique-split-temporary-variable",
+      "name": "Split Temporary Variable",
+      "group": "Composing Methods",
+      "symptom": "A técnica Split Temporary Variable responde a uma forma recorrente de acoplamento, duplicação ou complexidade estrutural.",
+      "response": "Faça uma mudança pequena, mantenha o comportamento coberto por testes e pare quando a evidência mostrar que o custo caiu.",
+      "sourceUrl": "https://refactoring.guru/pt-br/refactoring/techniques",
+      "refs": [
+        "refactoring-techniques",
+        "refactoring",
+        "clean-code"
+      ]
+    },
+    {
+      "id": "technique-remove-assignments-to-parameters",
+      "name": "Remove Assignments to Parameters",
+      "group": "Composing Methods",
+      "symptom": "A técnica Remove Assignments to Parameters responde a uma forma recorrente de acoplamento, duplicação ou complexidade estrutural.",
+      "response": "Faça uma mudança pequena, mantenha o comportamento coberto por testes e pare quando a evidência mostrar que o custo caiu.",
+      "sourceUrl": "https://refactoring.guru/pt-br/refactoring/techniques",
+      "refs": [
+        "refactoring-techniques",
+        "refactoring",
+        "clean-code"
+      ]
+    },
+    {
+      "id": "technique-replace-method-with-method-object",
+      "name": "Replace Method with Method Object",
+      "group": "Composing Methods",
+      "symptom": "A técnica Replace Method with Method Object responde a uma forma recorrente de acoplamento, duplicação ou complexidade estrutural.",
+      "response": "Faça uma mudança pequena, mantenha o comportamento coberto por testes e pare quando a evidência mostrar que o custo caiu.",
+      "sourceUrl": "https://refactoring.guru/pt-br/refactoring/techniques",
+      "refs": [
+        "refactoring-techniques",
+        "refactoring",
+        "clean-code"
+      ]
+    },
+    {
+      "id": "technique-substitute-algorithm",
+      "name": "Substitute Algorithm",
+      "group": "Composing Methods",
+      "symptom": "A técnica Substitute Algorithm responde a uma forma recorrente de acoplamento, duplicação ou complexidade estrutural.",
+      "response": "Faça uma mudança pequena, mantenha o comportamento coberto por testes e pare quando a evidência mostrar que o custo caiu.",
+      "sourceUrl": "https://refactoring.guru/pt-br/refactoring/techniques",
+      "refs": [
+        "refactoring-techniques",
+        "refactoring",
+        "clean-code"
+      ]
+    },
+    {
+      "id": "technique-move-method",
+      "name": "Move Method",
+      "group": "Moving Features between Objects",
+      "symptom": "A técnica Move Method responde a uma forma recorrente de acoplamento, duplicação ou complexidade estrutural.",
+      "response": "Faça uma mudança pequena, mantenha o comportamento coberto por testes e pare quando a evidência mostrar que o custo caiu.",
+      "sourceUrl": "https://refactoring.guru/pt-br/refactoring/techniques",
+      "refs": [
+        "refactoring-techniques",
+        "refactoring",
+        "clean-code"
+      ]
+    },
+    {
+      "id": "technique-move-field",
+      "name": "Move Field",
+      "group": "Moving Features between Objects",
+      "symptom": "A técnica Move Field responde a uma forma recorrente de acoplamento, duplicação ou complexidade estrutural.",
+      "response": "Faça uma mudança pequena, mantenha o comportamento coberto por testes e pare quando a evidência mostrar que o custo caiu.",
+      "sourceUrl": "https://refactoring.guru/pt-br/refactoring/techniques",
+      "refs": [
+        "refactoring-techniques",
+        "refactoring",
+        "clean-code"
+      ]
+    },
+    {
+      "id": "technique-extract-class",
+      "name": "Extract Class",
+      "group": "Moving Features between Objects",
+      "symptom": "A técnica Extract Class responde a uma forma recorrente de acoplamento, duplicação ou complexidade estrutural.",
+      "response": "Faça uma mudança pequena, mantenha o comportamento coberto por testes e pare quando a evidência mostrar que o custo caiu.",
+      "sourceUrl": "https://refactoring.guru/pt-br/refactoring/techniques",
+      "refs": [
+        "refactoring-techniques",
+        "refactoring",
+        "clean-code"
+      ]
+    },
+    {
+      "id": "technique-inline-class",
+      "name": "Inline Class",
+      "group": "Moving Features between Objects",
+      "symptom": "A técnica Inline Class responde a uma forma recorrente de acoplamento, duplicação ou complexidade estrutural.",
+      "response": "Faça uma mudança pequena, mantenha o comportamento coberto por testes e pare quando a evidência mostrar que o custo caiu.",
+      "sourceUrl": "https://refactoring.guru/pt-br/refactoring/techniques",
+      "refs": [
+        "refactoring-techniques",
+        "refactoring",
+        "clean-code"
+      ]
+    },
+    {
+      "id": "technique-hide-delegate",
+      "name": "Hide Delegate",
+      "group": "Moving Features between Objects",
+      "symptom": "A técnica Hide Delegate responde a uma forma recorrente de acoplamento, duplicação ou complexidade estrutural.",
+      "response": "Faça uma mudança pequena, mantenha o comportamento coberto por testes e pare quando a evidência mostrar que o custo caiu.",
+      "sourceUrl": "https://refactoring.guru/pt-br/refactoring/techniques",
+      "refs": [
+        "refactoring-techniques",
+        "refactoring",
+        "clean-code"
+      ]
+    },
+    {
+      "id": "technique-remove-middle-man",
+      "name": "Remove Middle Man",
+      "group": "Moving Features between Objects",
+      "symptom": "A técnica Remove Middle Man responde a uma forma recorrente de acoplamento, duplicação ou complexidade estrutural.",
+      "response": "Faça uma mudança pequena, mantenha o comportamento coberto por testes e pare quando a evidência mostrar que o custo caiu.",
+      "sourceUrl": "https://refactoring.guru/pt-br/refactoring/techniques",
+      "refs": [
+        "refactoring-techniques",
+        "refactoring",
+        "clean-code"
+      ]
+    },
+    {
+      "id": "technique-introduce-foreign-method",
+      "name": "Introduce Foreign Method",
+      "group": "Moving Features between Objects",
+      "symptom": "A técnica Introduce Foreign Method responde a uma forma recorrente de acoplamento, duplicação ou complexidade estrutural.",
+      "response": "Faça uma mudança pequena, mantenha o comportamento coberto por testes e pare quando a evidência mostrar que o custo caiu.",
+      "sourceUrl": "https://refactoring.guru/pt-br/refactoring/techniques",
+      "refs": [
+        "refactoring-techniques",
+        "refactoring",
+        "clean-code"
+      ]
+    },
+    {
+      "id": "technique-introduce-local-extension",
+      "name": "Introduce Local Extension",
+      "group": "Moving Features between Objects",
+      "symptom": "A técnica Introduce Local Extension responde a uma forma recorrente de acoplamento, duplicação ou complexidade estrutural.",
+      "response": "Faça uma mudança pequena, mantenha o comportamento coberto por testes e pare quando a evidência mostrar que o custo caiu.",
+      "sourceUrl": "https://refactoring.guru/pt-br/refactoring/techniques",
+      "refs": [
+        "refactoring-techniques",
+        "refactoring",
+        "clean-code"
+      ]
+    },
+    {
+      "id": "technique-change-value-to-reference",
+      "name": "Change Value to Reference",
+      "group": "Organizing Data",
+      "symptom": "A técnica Change Value to Reference responde a uma forma recorrente de acoplamento, duplicação ou complexidade estrutural.",
+      "response": "Faça uma mudança pequena, mantenha o comportamento coberto por testes e pare quando a evidência mostrar que o custo caiu.",
+      "sourceUrl": "https://refactoring.guru/pt-br/refactoring/techniques",
+      "refs": [
+        "refactoring-techniques",
+        "refactoring",
+        "clean-code"
+      ]
+    },
+    {
+      "id": "technique-change-reference-to-value",
+      "name": "Change Reference to Value",
+      "group": "Organizing Data",
+      "symptom": "A técnica Change Reference to Value responde a uma forma recorrente de acoplamento, duplicação ou complexidade estrutural.",
+      "response": "Faça uma mudança pequena, mantenha o comportamento coberto por testes e pare quando a evidência mostrar que o custo caiu.",
+      "sourceUrl": "https://refactoring.guru/pt-br/refactoring/techniques",
+      "refs": [
+        "refactoring-techniques",
+        "refactoring",
+        "clean-code"
+      ]
+    },
+    {
+      "id": "technique-duplicate-observed-data",
+      "name": "Duplicate Observed Data",
+      "group": "Organizing Data",
+      "symptom": "A técnica Duplicate Observed Data responde a uma forma recorrente de acoplamento, duplicação ou complexidade estrutural.",
+      "response": "Faça uma mudança pequena, mantenha o comportamento coberto por testes e pare quando a evidência mostrar que o custo caiu.",
+      "sourceUrl": "https://refactoring.guru/pt-br/refactoring/techniques",
+      "refs": [
+        "refactoring-techniques",
+        "refactoring",
+        "clean-code"
+      ]
+    },
+    {
+      "id": "technique-self-encapsulate-field",
+      "name": "Self Encapsulate Field",
+      "group": "Organizing Data",
+      "symptom": "A técnica Self Encapsulate Field responde a uma forma recorrente de acoplamento, duplicação ou complexidade estrutural.",
+      "response": "Faça uma mudança pequena, mantenha o comportamento coberto por testes e pare quando a evidência mostrar que o custo caiu.",
+      "sourceUrl": "https://refactoring.guru/pt-br/refactoring/techniques",
+      "refs": [
+        "refactoring-techniques",
+        "refactoring",
+        "clean-code"
+      ]
+    },
+    {
+      "id": "technique-replace-data-value-with-object",
+      "name": "Replace Data Value with Object",
+      "group": "Organizing Data",
+      "symptom": "A técnica Replace Data Value with Object responde a uma forma recorrente de acoplamento, duplicação ou complexidade estrutural.",
+      "response": "Faça uma mudança pequena, mantenha o comportamento coberto por testes e pare quando a evidência mostrar que o custo caiu.",
+      "sourceUrl": "https://refactoring.guru/pt-br/refactoring/techniques",
+      "refs": [
+        "refactoring-techniques",
+        "refactoring",
+        "clean-code"
+      ]
+    },
+    {
+      "id": "technique-replace-array-with-object",
+      "name": "Replace Array with Object",
+      "group": "Organizing Data",
+      "symptom": "A técnica Replace Array with Object responde a uma forma recorrente de acoplamento, duplicação ou complexidade estrutural.",
+      "response": "Faça uma mudança pequena, mantenha o comportamento coberto por testes e pare quando a evidência mostrar que o custo caiu.",
+      "sourceUrl": "https://refactoring.guru/pt-br/refactoring/techniques",
+      "refs": [
+        "refactoring-techniques",
+        "refactoring",
+        "clean-code"
+      ]
+    },
+    {
+      "id": "technique-change-unidirectional-association-to-bidirectional",
+      "name": "Change Unidirectional Association to Bidirectional",
+      "group": "Organizing Data",
+      "symptom": "A técnica Change Unidirectional Association to Bidirectional responde a uma forma recorrente de acoplamento, duplicação ou complexidade estrutural.",
+      "response": "Faça uma mudança pequena, mantenha o comportamento coberto por testes e pare quando a evidência mostrar que o custo caiu.",
+      "sourceUrl": "https://refactoring.guru/pt-br/refactoring/techniques",
+      "refs": [
+        "refactoring-techniques",
+        "refactoring",
+        "clean-code"
+      ]
+    },
+    {
+      "id": "technique-change-bidirectional-association-to-unidirectional",
+      "name": "Change Bidirectional Association to Unidirectional",
+      "group": "Organizing Data",
+      "symptom": "A técnica Change Bidirectional Association to Unidirectional responde a uma forma recorrente de acoplamento, duplicação ou complexidade estrutural.",
+      "response": "Faça uma mudança pequena, mantenha o comportamento coberto por testes e pare quando a evidência mostrar que o custo caiu.",
+      "sourceUrl": "https://refactoring.guru/pt-br/refactoring/techniques",
+      "refs": [
+        "refactoring-techniques",
+        "refactoring",
+        "clean-code"
+      ]
+    },
+    {
+      "id": "technique-encapsulate-field",
+      "name": "Encapsulate Field",
+      "group": "Organizing Data",
+      "symptom": "A técnica Encapsulate Field responde a uma forma recorrente de acoplamento, duplicação ou complexidade estrutural.",
+      "response": "Faça uma mudança pequena, mantenha o comportamento coberto por testes e pare quando a evidência mostrar que o custo caiu.",
+      "sourceUrl": "https://refactoring.guru/pt-br/refactoring/techniques",
+      "refs": [
+        "refactoring-techniques",
+        "refactoring",
+        "clean-code"
+      ]
+    },
+    {
+      "id": "technique-encapsulate-collection",
+      "name": "Encapsulate Collection",
+      "group": "Organizing Data",
+      "symptom": "A técnica Encapsulate Collection responde a uma forma recorrente de acoplamento, duplicação ou complexidade estrutural.",
+      "response": "Faça uma mudança pequena, mantenha o comportamento coberto por testes e pare quando a evidência mostrar que o custo caiu.",
+      "sourceUrl": "https://refactoring.guru/pt-br/refactoring/techniques",
+      "refs": [
+        "refactoring-techniques",
+        "refactoring",
+        "clean-code"
+      ]
+    },
+    {
+      "id": "technique-replace-magic-number-with-symbolic-constant",
+      "name": "Replace Magic Number with Symbolic Constant",
+      "group": "Organizing Data",
+      "symptom": "A técnica Replace Magic Number with Symbolic Constant responde a uma forma recorrente de acoplamento, duplicação ou complexidade estrutural.",
+      "response": "Faça uma mudança pequena, mantenha o comportamento coberto por testes e pare quando a evidência mostrar que o custo caiu.",
+      "sourceUrl": "https://refactoring.guru/pt-br/refactoring/techniques",
+      "refs": [
+        "refactoring-techniques",
+        "refactoring",
+        "clean-code"
+      ]
+    },
+    {
+      "id": "technique-replace-type-code-with-class",
+      "name": "Replace Type Code with Class",
+      "group": "Organizing Data",
+      "symptom": "A técnica Replace Type Code with Class responde a uma forma recorrente de acoplamento, duplicação ou complexidade estrutural.",
+      "response": "Faça uma mudança pequena, mantenha o comportamento coberto por testes e pare quando a evidência mostrar que o custo caiu.",
+      "sourceUrl": "https://refactoring.guru/pt-br/refactoring/techniques",
+      "refs": [
+        "refactoring-techniques",
+        "refactoring",
+        "clean-code"
+      ]
+    },
+    {
+      "id": "technique-replace-type-code-with-subclasses",
+      "name": "Replace Type Code with Subclasses",
+      "group": "Organizing Data",
+      "symptom": "A técnica Replace Type Code with Subclasses responde a uma forma recorrente de acoplamento, duplicação ou complexidade estrutural.",
+      "response": "Faça uma mudança pequena, mantenha o comportamento coberto por testes e pare quando a evidência mostrar que o custo caiu.",
+      "sourceUrl": "https://refactoring.guru/pt-br/refactoring/techniques",
+      "refs": [
+        "refactoring-techniques",
+        "refactoring",
+        "clean-code"
+      ]
+    },
+    {
+      "id": "technique-replace-type-code-with-state-strategy",
+      "name": "Replace Type Code with State/Strategy",
+      "group": "Organizing Data",
+      "symptom": "A técnica Replace Type Code with State/Strategy responde a uma forma recorrente de acoplamento, duplicação ou complexidade estrutural.",
+      "response": "Faça uma mudança pequena, mantenha o comportamento coberto por testes e pare quando a evidência mostrar que o custo caiu.",
+      "sourceUrl": "https://refactoring.guru/pt-br/refactoring/techniques",
+      "refs": [
+        "refactoring-techniques",
+        "refactoring",
+        "clean-code"
+      ]
+    },
+    {
+      "id": "technique-replace-subclass-with-fields",
+      "name": "Replace Subclass with Fields",
+      "group": "Organizing Data",
+      "symptom": "A técnica Replace Subclass with Fields responde a uma forma recorrente de acoplamento, duplicação ou complexidade estrutural.",
+      "response": "Faça uma mudança pequena, mantenha o comportamento coberto por testes e pare quando a evidência mostrar que o custo caiu.",
+      "sourceUrl": "https://refactoring.guru/pt-br/refactoring/techniques",
+      "refs": [
+        "refactoring-techniques",
+        "refactoring",
+        "clean-code"
+      ]
+    },
+    {
+      "id": "technique-consolidate-conditional-expression",
+      "name": "Consolidate Conditional Expression",
+      "group": "Simplifying Conditional Expressions",
+      "symptom": "A técnica Consolidate Conditional Expression responde a uma forma recorrente de acoplamento, duplicação ou complexidade estrutural.",
+      "response": "Faça uma mudança pequena, mantenha o comportamento coberto por testes e pare quando a evidência mostrar que o custo caiu.",
+      "sourceUrl": "https://refactoring.guru/pt-br/refactoring/techniques",
+      "refs": [
+        "refactoring-techniques",
+        "refactoring",
+        "clean-code"
+      ]
+    },
+    {
+      "id": "technique-consolidate-duplicate-conditional-fragments",
+      "name": "Consolidate Duplicate Conditional Fragments",
+      "group": "Simplifying Conditional Expressions",
+      "symptom": "A técnica Consolidate Duplicate Conditional Fragments responde a uma forma recorrente de acoplamento, duplicação ou complexidade estrutural.",
+      "response": "Faça uma mudança pequena, mantenha o comportamento coberto por testes e pare quando a evidência mostrar que o custo caiu.",
+      "sourceUrl": "https://refactoring.guru/pt-br/refactoring/techniques",
+      "refs": [
+        "refactoring-techniques",
+        "refactoring",
+        "clean-code"
+      ]
+    },
+    {
+      "id": "technique-decompose-conditional",
+      "name": "Decompose Conditional",
+      "group": "Simplifying Conditional Expressions",
+      "symptom": "A técnica Decompose Conditional responde a uma forma recorrente de acoplamento, duplicação ou complexidade estrutural.",
+      "response": "Faça uma mudança pequena, mantenha o comportamento coberto por testes e pare quando a evidência mostrar que o custo caiu.",
+      "sourceUrl": "https://refactoring.guru/pt-br/refactoring/techniques",
+      "refs": [
+        "refactoring-techniques",
+        "refactoring",
+        "clean-code"
+      ]
+    },
+    {
+      "id": "technique-replace-conditional-with-polymorphism",
+      "name": "Replace Conditional with Polymorphism",
+      "group": "Simplifying Conditional Expressions",
+      "symptom": "A técnica Replace Conditional with Polymorphism responde a uma forma recorrente de acoplamento, duplicação ou complexidade estrutural.",
+      "response": "Faça uma mudança pequena, mantenha o comportamento coberto por testes e pare quando a evidência mostrar que o custo caiu.",
+      "sourceUrl": "https://refactoring.guru/pt-br/refactoring/techniques",
+      "refs": [
+        "refactoring-techniques",
+        "refactoring",
+        "clean-code"
+      ]
+    },
+    {
+      "id": "technique-remove-control-flag",
+      "name": "Remove Control Flag",
+      "group": "Simplifying Conditional Expressions",
+      "symptom": "A técnica Remove Control Flag responde a uma forma recorrente de acoplamento, duplicação ou complexidade estrutural.",
+      "response": "Faça uma mudança pequena, mantenha o comportamento coberto por testes e pare quando a evidência mostrar que o custo caiu.",
+      "sourceUrl": "https://refactoring.guru/pt-br/refactoring/techniques",
+      "refs": [
+        "refactoring-techniques",
+        "refactoring",
+        "clean-code"
+      ]
+    },
+    {
+      "id": "technique-replace-nested-conditional-with-guard-clauses",
+      "name": "Replace Nested Conditional with Guard Clauses",
+      "group": "Simplifying Conditional Expressions",
+      "symptom": "A técnica Replace Nested Conditional with Guard Clauses responde a uma forma recorrente de acoplamento, duplicação ou complexidade estrutural.",
+      "response": "Faça uma mudança pequena, mantenha o comportamento coberto por testes e pare quando a evidência mostrar que o custo caiu.",
+      "sourceUrl": "https://refactoring.guru/pt-br/refactoring/techniques",
+      "refs": [
+        "refactoring-techniques",
+        "refactoring",
+        "clean-code"
+      ]
+    },
+    {
+      "id": "technique-introduce-null-object",
+      "name": "Introduce Null Object",
+      "group": "Simplifying Conditional Expressions",
+      "symptom": "A técnica Introduce Null Object responde a uma forma recorrente de acoplamento, duplicação ou complexidade estrutural.",
+      "response": "Faça uma mudança pequena, mantenha o comportamento coberto por testes e pare quando a evidência mostrar que o custo caiu.",
+      "sourceUrl": "https://refactoring.guru/pt-br/refactoring/techniques",
+      "refs": [
+        "refactoring-techniques",
+        "refactoring",
+        "clean-code"
+      ]
+    },
+    {
+      "id": "technique-introduce-assertion",
+      "name": "Introduce Assertion",
+      "group": "Simplifying Conditional Expressions",
+      "symptom": "A técnica Introduce Assertion responde a uma forma recorrente de acoplamento, duplicação ou complexidade estrutural.",
+      "response": "Faça uma mudança pequena, mantenha o comportamento coberto por testes e pare quando a evidência mostrar que o custo caiu.",
+      "sourceUrl": "https://refactoring.guru/pt-br/refactoring/techniques",
+      "refs": [
+        "refactoring-techniques",
+        "refactoring",
+        "clean-code"
+      ]
+    },
+    {
+      "id": "technique-add-parameter",
+      "name": "Add Parameter",
+      "group": "Simplifying Method Calls",
+      "symptom": "A técnica Add Parameter responde a uma forma recorrente de acoplamento, duplicação ou complexidade estrutural.",
+      "response": "Faça uma mudança pequena, mantenha o comportamento coberto por testes e pare quando a evidência mostrar que o custo caiu.",
+      "sourceUrl": "https://refactoring.guru/pt-br/refactoring/techniques",
+      "refs": [
+        "refactoring-techniques",
+        "refactoring",
+        "clean-code"
+      ]
+    },
+    {
+      "id": "technique-remove-parameter",
+      "name": "Remove Parameter",
+      "group": "Simplifying Method Calls",
+      "symptom": "A técnica Remove Parameter responde a uma forma recorrente de acoplamento, duplicação ou complexidade estrutural.",
+      "response": "Faça uma mudança pequena, mantenha o comportamento coberto por testes e pare quando a evidência mostrar que o custo caiu.",
+      "sourceUrl": "https://refactoring.guru/pt-br/refactoring/techniques",
+      "refs": [
+        "refactoring-techniques",
+        "refactoring",
+        "clean-code"
+      ]
+    },
+    {
+      "id": "technique-rename-method",
+      "name": "Rename Method",
+      "group": "Simplifying Method Calls",
+      "symptom": "A técnica Rename Method responde a uma forma recorrente de acoplamento, duplicação ou complexidade estrutural.",
+      "response": "Faça uma mudança pequena, mantenha o comportamento coberto por testes e pare quando a evidência mostrar que o custo caiu.",
+      "sourceUrl": "https://refactoring.guru/pt-br/refactoring/techniques",
+      "refs": [
+        "refactoring-techniques",
+        "refactoring",
+        "clean-code"
+      ]
+    },
+    {
+      "id": "technique-separate-query-from-modifier",
+      "name": "Separate Query from Modifier",
+      "group": "Simplifying Method Calls",
+      "symptom": "A técnica Separate Query from Modifier responde a uma forma recorrente de acoplamento, duplicação ou complexidade estrutural.",
+      "response": "Faça uma mudança pequena, mantenha o comportamento coberto por testes e pare quando a evidência mostrar que o custo caiu.",
+      "sourceUrl": "https://refactoring.guru/pt-br/refactoring/techniques",
+      "refs": [
+        "refactoring-techniques",
+        "refactoring",
+        "clean-code"
+      ]
+    },
+    {
+      "id": "technique-parameterize-method",
+      "name": "Parameterize Method",
+      "group": "Simplifying Method Calls",
+      "symptom": "A técnica Parameterize Method responde a uma forma recorrente de acoplamento, duplicação ou complexidade estrutural.",
+      "response": "Faça uma mudança pequena, mantenha o comportamento coberto por testes e pare quando a evidência mostrar que o custo caiu.",
+      "sourceUrl": "https://refactoring.guru/pt-br/refactoring/techniques",
+      "refs": [
+        "refactoring-techniques",
+        "refactoring",
+        "clean-code"
+      ]
+    },
+    {
+      "id": "technique-introduce-parameter-object",
+      "name": "Introduce Parameter Object",
+      "group": "Simplifying Method Calls",
+      "symptom": "A técnica Introduce Parameter Object responde a uma forma recorrente de acoplamento, duplicação ou complexidade estrutural.",
+      "response": "Faça uma mudança pequena, mantenha o comportamento coberto por testes e pare quando a evidência mostrar que o custo caiu.",
+      "sourceUrl": "https://refactoring.guru/pt-br/refactoring/techniques",
+      "refs": [
+        "refactoring-techniques",
+        "refactoring",
+        "clean-code"
+      ]
+    },
+    {
+      "id": "technique-preserve-whole-object",
+      "name": "Preserve Whole Object",
+      "group": "Simplifying Method Calls",
+      "symptom": "A técnica Preserve Whole Object responde a uma forma recorrente de acoplamento, duplicação ou complexidade estrutural.",
+      "response": "Faça uma mudança pequena, mantenha o comportamento coberto por testes e pare quando a evidência mostrar que o custo caiu.",
+      "sourceUrl": "https://refactoring.guru/pt-br/refactoring/techniques",
+      "refs": [
+        "refactoring-techniques",
+        "refactoring",
+        "clean-code"
+      ]
+    },
+    {
+      "id": "technique-remove-setting-method",
+      "name": "Remove Setting Method",
+      "group": "Simplifying Method Calls",
+      "symptom": "A técnica Remove Setting Method responde a uma forma recorrente de acoplamento, duplicação ou complexidade estrutural.",
+      "response": "Faça uma mudança pequena, mantenha o comportamento coberto por testes e pare quando a evidência mostrar que o custo caiu.",
+      "sourceUrl": "https://refactoring.guru/pt-br/refactoring/techniques",
+      "refs": [
+        "refactoring-techniques",
+        "refactoring",
+        "clean-code"
+      ]
+    },
+    {
+      "id": "technique-replace-parameter-with-explicit-methods",
+      "name": "Replace Parameter with Explicit Methods",
+      "group": "Simplifying Method Calls",
+      "symptom": "A técnica Replace Parameter with Explicit Methods responde a uma forma recorrente de acoplamento, duplicação ou complexidade estrutural.",
+      "response": "Faça uma mudança pequena, mantenha o comportamento coberto por testes e pare quando a evidência mostrar que o custo caiu.",
+      "sourceUrl": "https://refactoring.guru/pt-br/refactoring/techniques",
+      "refs": [
+        "refactoring-techniques",
+        "refactoring",
+        "clean-code"
+      ]
+    },
+    {
+      "id": "technique-replace-parameter-with-method-call",
+      "name": "Replace Parameter with Method Call",
+      "group": "Simplifying Method Calls",
+      "symptom": "A técnica Replace Parameter with Method Call responde a uma forma recorrente de acoplamento, duplicação ou complexidade estrutural.",
+      "response": "Faça uma mudança pequena, mantenha o comportamento coberto por testes e pare quando a evidência mostrar que o custo caiu.",
+      "sourceUrl": "https://refactoring.guru/pt-br/refactoring/techniques",
+      "refs": [
+        "refactoring-techniques",
+        "refactoring",
+        "clean-code"
+      ]
+    },
+    {
+      "id": "technique-hide-method",
+      "name": "Hide Method",
+      "group": "Simplifying Method Calls",
+      "symptom": "A técnica Hide Method responde a uma forma recorrente de acoplamento, duplicação ou complexidade estrutural.",
+      "response": "Faça uma mudança pequena, mantenha o comportamento coberto por testes e pare quando a evidência mostrar que o custo caiu.",
+      "sourceUrl": "https://refactoring.guru/pt-br/refactoring/techniques",
+      "refs": [
+        "refactoring-techniques",
+        "refactoring",
+        "clean-code"
+      ]
+    },
+    {
+      "id": "technique-replace-constructor-with-factory-method",
+      "name": "Replace Constructor with Factory Method",
+      "group": "Simplifying Method Calls",
+      "symptom": "A técnica Replace Constructor with Factory Method responde a uma forma recorrente de acoplamento, duplicação ou complexidade estrutural.",
+      "response": "Faça uma mudança pequena, mantenha o comportamento coberto por testes e pare quando a evidência mostrar que o custo caiu.",
+      "sourceUrl": "https://refactoring.guru/pt-br/refactoring/techniques",
+      "refs": [
+        "refactoring-techniques",
+        "refactoring",
+        "clean-code"
+      ]
+    },
+    {
+      "id": "technique-replace-error-code-with-exception",
+      "name": "Replace Error Code with Exception",
+      "group": "Simplifying Method Calls",
+      "symptom": "A técnica Replace Error Code with Exception responde a uma forma recorrente de acoplamento, duplicação ou complexidade estrutural.",
+      "response": "Faça uma mudança pequena, mantenha o comportamento coberto por testes e pare quando a evidência mostrar que o custo caiu.",
+      "sourceUrl": "https://refactoring.guru/pt-br/refactoring/techniques",
+      "refs": [
+        "refactoring-techniques",
+        "refactoring",
+        "clean-code"
+      ]
+    },
+    {
+      "id": "technique-replace-exception-with-test",
+      "name": "Replace Exception with Test",
+      "group": "Simplifying Method Calls",
+      "symptom": "A técnica Replace Exception with Test responde a uma forma recorrente de acoplamento, duplicação ou complexidade estrutural.",
+      "response": "Faça uma mudança pequena, mantenha o comportamento coberto por testes e pare quando a evidência mostrar que o custo caiu.",
+      "sourceUrl": "https://refactoring.guru/pt-br/refactoring/techniques",
+      "refs": [
+        "refactoring-techniques",
+        "refactoring",
+        "clean-code"
+      ]
+    },
+    {
+      "id": "technique-pull-up-field",
+      "name": "Pull Up Field",
+      "group": "Dealing with Generalization",
+      "symptom": "A técnica Pull Up Field responde a uma forma recorrente de acoplamento, duplicação ou complexidade estrutural.",
+      "response": "Faça uma mudança pequena, mantenha o comportamento coberto por testes e pare quando a evidência mostrar que o custo caiu.",
+      "sourceUrl": "https://refactoring.guru/pt-br/refactoring/techniques",
+      "refs": [
+        "refactoring-techniques",
+        "refactoring",
+        "clean-code"
+      ]
+    },
+    {
+      "id": "technique-pull-up-method",
+      "name": "Pull Up Method",
+      "group": "Dealing with Generalization",
+      "symptom": "A técnica Pull Up Method responde a uma forma recorrente de acoplamento, duplicação ou complexidade estrutural.",
+      "response": "Faça uma mudança pequena, mantenha o comportamento coberto por testes e pare quando a evidência mostrar que o custo caiu.",
+      "sourceUrl": "https://refactoring.guru/pt-br/refactoring/techniques",
+      "refs": [
+        "refactoring-techniques",
+        "refactoring",
+        "clean-code"
+      ]
+    },
+    {
+      "id": "technique-pull-up-constructor-body",
+      "name": "Pull Up Constructor Body",
+      "group": "Dealing with Generalization",
+      "symptom": "A técnica Pull Up Constructor Body responde a uma forma recorrente de acoplamento, duplicação ou complexidade estrutural.",
+      "response": "Faça uma mudança pequena, mantenha o comportamento coberto por testes e pare quando a evidência mostrar que o custo caiu.",
+      "sourceUrl": "https://refactoring.guru/pt-br/refactoring/techniques",
+      "refs": [
+        "refactoring-techniques",
+        "refactoring",
+        "clean-code"
+      ]
+    },
+    {
+      "id": "technique-push-down-field",
+      "name": "Push Down Field",
+      "group": "Dealing with Generalization",
+      "symptom": "A técnica Push Down Field responde a uma forma recorrente de acoplamento, duplicação ou complexidade estrutural.",
+      "response": "Faça uma mudança pequena, mantenha o comportamento coberto por testes e pare quando a evidência mostrar que o custo caiu.",
+      "sourceUrl": "https://refactoring.guru/pt-br/refactoring/techniques",
+      "refs": [
+        "refactoring-techniques",
+        "refactoring",
+        "clean-code"
+      ]
+    },
+    {
+      "id": "technique-push-down-method",
+      "name": "Push Down Method",
+      "group": "Dealing with Generalization",
+      "symptom": "A técnica Push Down Method responde a uma forma recorrente de acoplamento, duplicação ou complexidade estrutural.",
+      "response": "Faça uma mudança pequena, mantenha o comportamento coberto por testes e pare quando a evidência mostrar que o custo caiu.",
+      "sourceUrl": "https://refactoring.guru/pt-br/refactoring/techniques",
+      "refs": [
+        "refactoring-techniques",
+        "refactoring",
+        "clean-code"
+      ]
+    },
+    {
+      "id": "technique-extract-subclass",
+      "name": "Extract Subclass",
+      "group": "Dealing with Generalization",
+      "symptom": "A técnica Extract Subclass responde a uma forma recorrente de acoplamento, duplicação ou complexidade estrutural.",
+      "response": "Faça uma mudança pequena, mantenha o comportamento coberto por testes e pare quando a evidência mostrar que o custo caiu.",
+      "sourceUrl": "https://refactoring.guru/pt-br/refactoring/techniques",
+      "refs": [
+        "refactoring-techniques",
+        "refactoring",
+        "clean-code"
+      ]
+    },
+    {
+      "id": "technique-extract-superclass",
+      "name": "Extract Superclass",
+      "group": "Dealing with Generalization",
+      "symptom": "A técnica Extract Superclass responde a uma forma recorrente de acoplamento, duplicação ou complexidade estrutural.",
+      "response": "Faça uma mudança pequena, mantenha o comportamento coberto por testes e pare quando a evidência mostrar que o custo caiu.",
+      "sourceUrl": "https://refactoring.guru/pt-br/refactoring/techniques",
+      "refs": [
+        "refactoring-techniques",
+        "refactoring",
+        "clean-code"
+      ]
+    },
+    {
+      "id": "technique-extract-interface",
+      "name": "Extract Interface",
+      "group": "Dealing with Generalization",
+      "symptom": "A técnica Extract Interface responde a uma forma recorrente de acoplamento, duplicação ou complexidade estrutural.",
+      "response": "Faça uma mudança pequena, mantenha o comportamento coberto por testes e pare quando a evidência mostrar que o custo caiu.",
+      "sourceUrl": "https://refactoring.guru/pt-br/refactoring/techniques",
+      "refs": [
+        "refactoring-techniques",
+        "refactoring",
+        "clean-code"
+      ]
+    },
+    {
+      "id": "technique-collapse-hierarchy",
+      "name": "Collapse Hierarchy",
+      "group": "Dealing with Generalization",
+      "symptom": "A técnica Collapse Hierarchy responde a uma forma recorrente de acoplamento, duplicação ou complexidade estrutural.",
+      "response": "Faça uma mudança pequena, mantenha o comportamento coberto por testes e pare quando a evidência mostrar que o custo caiu.",
+      "sourceUrl": "https://refactoring.guru/pt-br/refactoring/techniques",
+      "refs": [
+        "refactoring-techniques",
+        "refactoring",
+        "clean-code"
+      ]
+    },
+    {
+      "id": "technique-form-template-method",
+      "name": "Form Template Method",
+      "group": "Dealing with Generalization",
+      "symptom": "A técnica Form Template Method responde a uma forma recorrente de acoplamento, duplicação ou complexidade estrutural.",
+      "response": "Faça uma mudança pequena, mantenha o comportamento coberto por testes e pare quando a evidência mostrar que o custo caiu.",
+      "sourceUrl": "https://refactoring.guru/pt-br/refactoring/techniques",
+      "refs": [
+        "refactoring-techniques",
+        "refactoring",
+        "clean-code"
+      ]
+    },
+    {
+      "id": "technique-replace-inheritance-with-delegation",
+      "name": "Replace Inheritance with Delegation",
+      "group": "Dealing with Generalization",
+      "symptom": "A técnica Replace Inheritance with Delegation responde a uma forma recorrente de acoplamento, duplicação ou complexidade estrutural.",
+      "response": "Faça uma mudança pequena, mantenha o comportamento coberto por testes e pare quando a evidência mostrar que o custo caiu.",
+      "sourceUrl": "https://refactoring.guru/pt-br/refactoring/techniques",
+      "refs": [
+        "refactoring-techniques",
+        "refactoring",
+        "clean-code"
+      ]
+    },
+    {
+      "id": "technique-replace-delegation-with-inheritance",
+      "name": "Replace Delegation with Inheritance",
+      "group": "Dealing with Generalization",
+      "symptom": "A técnica Replace Delegation with Inheritance responde a uma forma recorrente de acoplamento, duplicação ou complexidade estrutural.",
+      "response": "Faça uma mudança pequena, mantenha o comportamento coberto por testes e pare quando a evidência mostrar que o custo caiu.",
+      "sourceUrl": "https://refactoring.guru/pt-br/refactoring/techniques",
+      "refs": [
+        "refactoring-techniques",
+        "refactoring",
+        "clean-code"
       ]
     }
   ]

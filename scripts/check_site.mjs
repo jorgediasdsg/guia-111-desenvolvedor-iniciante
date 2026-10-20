@@ -11,7 +11,7 @@ if (missingFiles.length) throw new Error(`Arquivos ausentes: ${missingFiles.join
 const index = read("index.html");
 const presentation = read("apresentacao.html");
 const app = read("assets/js/app.js");
-const expectedIds = ["workflow", "workflow-track", "issue-memory", "continuous-improvement", "harness-artifacts", "didactic-model", "model-routing", "architecture", "library", "references"];
+const expectedIds = ["workflow", "workflow-track", "issue-memory", "continuous-improvement", "harness-artifacts", "didactic-model", "model-routing", "architecture", "refactoring-catalog", "solid-principles", "clean-code-principles", "refactoring-smells", "refactoring-techniques", "library", "references"];
 const missingIds = expectedIds.filter((id) => !index.includes(`id="${id}"`));
 if (missingIds.length) throw new Error(`Âncoras ausentes: ${missingIds.join(", ")}`);
 
@@ -30,6 +30,13 @@ if (content.concepts.some((concept) => !concept.application?.steps?.length || di
 if (!content.harnessArtifacts?.length || !content.didacticTemplate?.length) throw new Error("Artefatos do harness ou estrutura didática ausentes");
 if (!app.includes("data-copy-concept") || !app.includes("data-copy-artifact")) throw new Error("Controles de cópia ausentes");
 if (!presentation.includes("#continuous-improvement")) throw new Error("Slide de melhoria contínua sem link profundo");
+if (content.patternCatalog?.length !== 22) throw new Error("Esperados 22 Design Patterns");
+if (!["factory-method", "singleton"].every((id) => content.patternCatalog.some((pattern) => pattern.id === id && pattern.code))) throw new Error("Factory Method e Singleton precisam de código copiável");
+if (content.solidPrinciples?.length !== 5) throw new Error("Esperados cinco princípios SOLID");
+if (!content.cleanCodePrinciples?.length || !content.refactoringSmells?.length || content.refactoringTechniques?.length !== 66) throw new Error("Catálogo de Clean Code ou refactoring incompleto");
+const sourceItems = [...content.patternCatalog, ...content.solidPrinciples, ...content.cleanCodePrinciples, ...content.refactoringSmells, ...content.refactoringTechniques];
+if (sourceItems.some((item) => !item.sourceUrl?.includes("refactoring.guru") || !item.refs?.length)) throw new Error("Item do catálogo sem origem ou bibliografia");
+if (!app.includes("data-pattern-id") || !app.includes("pattern-filter")) throw new Error("Interação do catálogo ausente");
 if (content.concepts[0].term !== "rate limit" || content.concepts[0].gloss !== "limite de requisições") throw new Error("Termo rate limit não está no formato solicitado");
 
 console.log(`OK: ${requiredFiles.length} arquivos, ${content.concepts.length} conceitos, ${content.references.length} referências e ${slideCount} slides`);
